@@ -46,3 +46,10 @@ def affirmation():
 @simple_routes.route('/message')
 def mesage():
     return redirect(url_for(affirmation))
+
+@simple_routes.route('/data')
+def get_data():
+    data = {"a":{"b": "123", "c": "Whats"}, "z": {"b": "456", "c": "UP?"}}
+    response = make_response(jsonify(data))
+    response.status_code = 200
+    return response
