@@ -24,10 +24,40 @@ def get_workout_log(client_id):
     cursor.execute(query)
     theData = cursor.fetchall()
     
-    # Another example of logging for debugging purposes.
-    # You can see if the data you're getting back is what you expect. 
+    # Check if data received is what is expected.
     current_app.logger.info(f'GET /workout_log/<client_id> Result of query = {theData}')
     
     response = make_response(jsonify(theData))
     response.status_code = 200
+    return response
+
+#------------------------------------------------------------
+# POST: Add a new workout log for {client_id}
+@client_routes.route('/workout_log/<client_id>', methods=['POST'])
+def add_workout_log(client_id):
+    
+    # collect data from the request object 
+    the_data = request.json
+    current_app.logger.info(the_data)
+
+    #extracting the variable
+    total_weight = the_data['Total_Weight']
+    total_time = the_data['Total_Time']
+    
+    query = f'''
+        INSERT INTO Workout_Logs (User_ID,
+                              Total_Weight, 
+                              Total_Time)
+        VALUES ('{client_id}', '{total_weight}', '{total_time}')
+    '''
+    
+    current_app.logger.info(query)
+
+    # executing and committing the insert statement 
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    response = make_response("Successfully added workout log")
+    response.status_code = 201
     return response
