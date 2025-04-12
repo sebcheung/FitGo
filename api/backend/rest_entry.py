@@ -5,6 +5,7 @@ from backend.clients.client_routes import clients
 from backend.gym_owner_routes import gym
 from backend.clients.client_routes import clients
 from backend.clients.client_routes import clients
+
 import os
 from dotenv import load_dotenv
 
@@ -42,6 +43,8 @@ def create_app():
     app.logger.info('current_app(): registering blueprints with Flask app object.')   
     app.register_blueprint(client_routes,   url_prefix='/c')
     app.register_blueprint(products,    url_prefix='/p')
+    app.register_blueprint(gym_owner,    url_prefix='/go')
+
 
     # Don't forget to return the app object
     return app
