@@ -13,7 +13,7 @@ trainers = Blueprint('trainers', __name__)
 @trainers.route('/workout_plans/<clientID>', methods=['GET'])
 def get_workout_plans(clientID):
     current_app.logger.info('GET /workout_plans/<clientID> route')
-    cursor = db.get_db().cursor()
+ g   cursor = db.get_db().cursor()
     query = 'SELECT * FROM Workout_Plans WHERE Client_ID = {0}'.format(clientID)
     cursor.execute(query, (clientID))
     data = cursor.fetchall()
