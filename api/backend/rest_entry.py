@@ -27,10 +27,10 @@ def create_app():
 
     # # these are for the DB object to be able to connect to MySQL. 
     # app.config['MYSQL_DATABASE_USER'] = 'root'
-    app.config['MYSQL_DATABASE_USER'] = os.getenv('DB_USER').strip()
-    app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('MYSQL_ROOT_PASSWORD').strip()
-    app.config['MYSQL_DATABASE_HOST'] = os.getenv('DB_HOST').strip()
-    app.config['MYSQL_DATABASE_PORT'] = int(os.getenv('DB_PORT').strip())
+    app.config['MYSQL_DATABASE_USER'] = 'root'
+    app.config['MYSQL_DATABASE_PASSWORD'] = 'password'
+    app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+    app.config['MYSQL_DATABASE_PORT'] = 3306
     app.config['MYSQL_DATABASE_DB'] = 'Fitgo'
 
     # Initialize the database object with the settings above. 
