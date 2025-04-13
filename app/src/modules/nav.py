@@ -36,7 +36,7 @@ def Leaderboard():
 
 def Stats():
     st.sidebar.page_link(
-        "pages/04_Stats.py", label="Statistics and Metrics", icon="📊"
+        "pages/04_Stats.py", label="Statistics and Health Metrics", icon="📊"
     )
 
 #### ------------------------ Examples for Role of pol_strat_advisor ------------------------
