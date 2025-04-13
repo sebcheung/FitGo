@@ -256,7 +256,7 @@ def delete_client(client_id):
 
 # Create route to delete an event 
 @gym_owner.route('/events/<event_id>', methods = ['DELETE'])
-def delete_client(event_id):
+def delete_event(event_id):
     current_app.logger.info(f'DELETE /gym-owner/events/{event_id} route')
     query = 'DELETE FROM Event WHERE Event_ID = %s'
     data = (event_id)
