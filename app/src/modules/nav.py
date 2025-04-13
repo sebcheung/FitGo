@@ -13,6 +13,31 @@ def HomeNav():
 def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
 
+#### ------------------------ For Role of Clients -------------------------------------------
+def ClientsHomeNav():
+    st.sidebar.page_link(
+        "pages/00_Client_Home.py", label="Client Home", icon="🏋️"
+    )
+
+def WorkoutLog():
+    st.sidebar.page_link(
+        "pages/01_Workout_Log.py", label="Workout Log", icon="[|━|]"
+    )
+
+def DietPlanner():
+    st.sidebar.page_link(
+        "pages/02_Diet_Planner.py", label="Diet Planner", icon="🍽️"
+    )
+
+def Leaderboard():
+    st.sidebar.page_link(
+        "pages/03_Leaderboard.py", label="Leaderboard", icon="🏆"
+    )
+
+def Stats():
+    st.sidebar.page_link(
+        "pages/04_Stats.py", label="Statistics and Metrics", icon="📊"
+    )
 
 #### ------------------------ Examples for Role of pol_strat_advisor ------------------------
 def PolStratAdvHomeNav():
@@ -76,6 +101,13 @@ def SideBarLinks(show_home=False):
 
     # Show the other page navigators depending on the users' role.
     if st.session_state["authenticated"]:
+        # If the user is Clients, show Workout Log, Leaderboard, Diet Planner, and Health Metrics
+        if st.session_state["role"] == "client":
+            ClientsHomeNav()
+            WorkoutLog()
+            DietPlanner()
+            Leaderboard()
+            Stats()
 
         # Show World Bank Link and Map Demo Link if the user is a political strategy advisor role.
         if st.session_state["role"] == "pol_strat_advisor":
