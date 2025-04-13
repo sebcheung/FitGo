@@ -21,7 +21,7 @@ def ClientsHomeNav():
 
 def WorkoutLog():
     st.sidebar.page_link(
-        "pages/01_Workout_Log.py", label="Workout Log", icon="[|━|]"
+        "pages/01_Workout_Log.py", label="Workout Log", icon="💪"
     )
 
 def DietPlanner():
