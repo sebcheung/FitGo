@@ -41,8 +41,8 @@ def create_app():
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
     app.logger.info('current_app(): registering blueprints with Flask app object.')   
-    app.register_blueprint(clients,   url_prefix='/c')
-    app.register_blueprint(trainer,    url_prefix='/t')
+    app.register_blueprint(client_routes,   url_prefix='/c')
+    app.register_blueprint(trainers,    url_prefix='/t')
     app.register_blueprint(gym_owner,    url_prefix='/go')
     app.register_blueprint(nutritionist,    url_prefix='/n')
 
