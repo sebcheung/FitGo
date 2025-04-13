@@ -1,10 +1,10 @@
 from flask import Flask
 
 from backend.db_connection import db
-from backend.clients.client_routes import clients
+from backend.clients.client_routes import client_routes
 from backend.gym_owner.gym_owner_routes import gym_owner
 from backend.nutritionist.nutritionist_routes import nutritionist
-from backend.trainer.trainer_routes import trainer
+from backend.trainer.trainer_routes import trainers
 
 import os
 from dotenv import load_dotenv
