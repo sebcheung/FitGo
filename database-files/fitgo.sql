@@ -1,6 +1,6 @@
 -- Creating the FitGo Database
 DROP DATABASE IF EXISTS FitGo;
-CREATE DATABASE FitGo;
+CREATE DATABASE IF NOT EXISTS FitGo;
 
 -- Using the newly created FitGo Database
 USE FitGo;

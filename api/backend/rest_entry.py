@@ -1,7 +1,7 @@
 from flask import Flask
 
 from backend.db_connection import db
-from backend.clients.client_routes import client_routes
+from backend.clients.client_routes import client
 from backend.gym_owner.gym_owner_routes import gym_owner
 from backend.nutritionist.nutritionist_routes import nutritionist
 from backend.trainer.trainer_routes import trainers
@@ -29,9 +29,9 @@ def create_app():
     # app.config['MYSQL_DATABASE_USER'] = 'root'
     app.config['MYSQL_DATABASE_USER'] = 'root'
     app.config['MYSQL_DATABASE_PASSWORD'] = 'password'
-    app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+    app.config['MYSQL_DATABASE_HOST'] = 'db'
     app.config['MYSQL_DATABASE_PORT'] = 3306
-    app.config['MYSQL_DATABASE_DB'] = 'Fitgo'
+    app.config['MYSQL_DATABASE_DB'] = 'FitGo'
 
     # Initialize the database object with the settings above. 
     app.logger.info('current_app(): starting the database connection')
@@ -41,7 +41,7 @@ def create_app():
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
     app.logger.info('current_app(): registering blueprints with Flask app object.')   
-    app.register_blueprint(client_routes,   url_prefix='/c')
+    app.register_blueprint(client,   url_prefix='/c')
     app.register_blueprint(trainers,    url_prefix='/t')
     app.register_blueprint(gym_owner,    url_prefix='/go')
     app.register_blueprint(nutritionist,    url_prefix='/n')

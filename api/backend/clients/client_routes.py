@@ -10,11 +10,11 @@ from flask import make_response
 from flask import current_app
 from backend.db_connection import db
 
-client_routes = Blueprint('client_routes', __name__)
+client = Blueprint('client', __name__)
 
 #------------------------------------------------------------
 # GET: Retrieve the workout log for {client_id}
-@client_routes.route('/workout_log/<client_id>', methods=['GET'])
+@client.route('/workout_log/<client_id>', methods=['GET'])
 def get_workout_log(client_id):
 
     query = f'''SELECT WorkoutLog_ID, 
@@ -42,7 +42,7 @@ def get_workout_log(client_id):
 
 #------------------------------------------------------------
 # POST: Add a new workout log for {client_id}
-@client_routes.route('/workout_log/<client_id>', methods=['POST'])
+@client.route('/workout_log/<client_id>', methods=['POST'])
 def add_workout_log(client_id):
     
     # collect data from the request object 
@@ -73,7 +73,7 @@ def add_workout_log(client_id):
 
 #------------------------------------------------------------
 # GET: Retrieve leaderboard position for {client_id}
-@client_routes.route('/leaderboard/<client_id>', methods=['GET'])
+@client.route('/leaderboard/<client_id>', methods=['GET'])
 def get_leaderboard_position(client_id):
     
     query = f'''
@@ -102,7 +102,7 @@ def get_leaderboard_position(client_id):
 
 #------------------------------------------------------------
 # POST: Add leaderboard position for {client_id}
-@client_routes.route('/leaderboard/<client_id>', methods=['POST'])
+@client.route('/leaderboard/<client_id>', methods=['POST'])
 def add_leaderboard_position(client_id):
     
     the_data = request.json
@@ -132,7 +132,7 @@ def add_leaderboard_position(client_id):
 
 #------------------------------------------------------------
 # PUT: Update leaderboard position for {client_id}
-@client_routes.route('/leaderboard/<client_id>', methods=['PUT'])
+@client.route('/leaderboard/<client_id>', methods=['PUT'])
 def update_leaderboard_position(client_id):
     
     the_data = request.json
@@ -171,7 +171,7 @@ def update_leaderboard_position(client_id):
 
 #------------------------------------------------------------
 # GET: Retrieve reminders for {client_id}
-@client_routes.route('/reminders/<client_id>', methods=['GET'])
+@client.route('/reminders/<client_id>', methods=['GET'])
 def get_reminders(client_id):
     
     query = f'''
@@ -199,7 +199,7 @@ def get_reminders(client_id):
 
 #------------------------------------------------------------
 # POST: Add a reminder for {client_id}
-@client_routes.route('/reminders/<client_id>', methods=['POST'])
+@client.route('/reminders/<client_id>', methods=['POST'])
 def add_reminder(client_id):
     the_data = request.json
     current_app.logger.info(the_data)
@@ -227,7 +227,7 @@ def add_reminder(client_id):
 
 #------------------------------------------------------------
 # PUT: Update a reminder for {client_id}
-@client_routes.route('/reminders/<client_id>/<reminder_id>', methods=['PUT'])
+@client.route('/reminders/<client_id>/<reminder_id>', methods=['PUT'])
 def update_reminder(client_id, reminder_id):
     
     the_data = request.json
@@ -267,7 +267,7 @@ def update_reminder(client_id, reminder_id):
 
 #------------------------------------------------------------
 # DELETE: Delete a reminder for {client_id}
-@client_routes.route('/reminders/<client_id>/<reminder_id>', methods=['DELETE'])
+@client.route('/reminders/<client_id>/<reminder_id>', methods=['DELETE'])
 def delete_reminder(client_id, reminder_id):
     
     query = f'''
