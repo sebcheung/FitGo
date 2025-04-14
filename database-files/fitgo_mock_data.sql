@@ -1,3 +1,4 @@
+USE FitGo
 -- CLIENTS --
 insert into Client (client_id, firstname, lastname, email, join_date, sex, age, weight, height, phone_number) values (1, 'Bone', 'Clewley', 'bclewley0@ifeng.com', CURRENT_TIMESTAMP, 'Male', 21, 158, 94, '542-422-9650');
 insert into Client (client_id, firstname, lastname, email, join_date, sex, age, weight, height, phone_number) values (2, 'Fawne', 'Daspar', 'fdaspar1@symantec.com', CURRENT_TIMESTAMP, 'Female', 45, 203, 33, '341-802-3173');
