@@ -2,25 +2,33 @@ import logging
 logger = logging.getLogger(__name__)
 import pandas as pd
 import streamlit as st
-from streamlit_extras.app_logo import add_logo
-import matplotlib.pyplot as plt
-import numpy as np
-import plotly.express as px
+import requests
 from modules.nav import SideBarLinks
 
 # Call the SideBarLinks from the nav module in the modules directory
 SideBarLinks()
 
 # set the header of the page
-st.header('World Bank Data')
+st.header('Workout Logger')
 
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
-# the with statment shows the code for this block above it 
-with st.echo(code_location='above'):
-    arr = np.random.normal(1, 1, size=100)
-    test_plot, ax = plt.subplots()
-    ax.hist(arr, bins=20)
+# Button to fetch workout logs
+if st.button("Fetch Workout Logs"):
+    url = "http://localhost:4000/workout_log/33"
+    
+    # Send GET request to your Flask backend
+    response = requests.get(url)
 
-    st.pyplot(test_plot)
+    # Handle valid response
+    if response.status_code == 200:
+        data = response.json()
+        if len(data) > 0:
+            df = pd.DataFrame(data)
+            st.subheader("Workout Logs for Client ID 33")
+            st.dataframe(df)
+        else:
+            st.warning("No workout logs found for this client.")
+    else:
+        st.error(f"Failed to fetch data. Status code: {response.status_code}")
