@@ -14,7 +14,7 @@ st.header('Workout Logger')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
-api_url = "http://localhost:4000/c/workout_log/33"
+api_url = "http://web-api:4000/c/workout_log/33"
 
 try:
     # Log the URL we're trying to connect to
