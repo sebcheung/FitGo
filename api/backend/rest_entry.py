@@ -31,7 +31,7 @@ def create_app():
     app.config['MYSQL_DATABASE_PASSWORD'] = 'password'
     app.config['MYSQL_DATABASE_HOST'] = 'db'
     app.config['MYSQL_DATABASE_PORT'] = 3306
-    app.config['MYSQL_DATABASE_DB'] = 'Fitgo'
+    app.config['MYSQL_DATABASE_DB'] = 'fitgo_db'
 
     # Initialize the database object with the settings above. 
     app.logger.info('current_app(): starting the database connection')
