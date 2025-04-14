@@ -16,7 +16,7 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 
 # Button to fetch workout logs
 if st.button("Fetch Workout Logs"):
-    url = "http://localhost:4000/workout_log/33"
+    url = "http://web-api:4000/workout_log/33"
     
     # Send GET request to your Flask backend
     response = requests.get(url)
