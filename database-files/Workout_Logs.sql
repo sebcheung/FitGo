@@ -1,3 +1,4 @@
+USE FitGo;
 insert into Workout_Logs (workoutlog_id, user_id, total_weight, total_time) values (1, 18, 223, 80);
 insert into Workout_Logs (workoutlog_id, user_id, total_weight, total_time) values (2, 4, 193, 298);
 insert into Workout_Logs (workoutlog_id, user_id, total_weight, total_time) values (3, 17, 240, 6);
