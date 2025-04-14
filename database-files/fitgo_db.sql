@@ -12,7 +12,7 @@ CREATE TABLE Client (
     LastName varchar(50) NOT NULL,
     Email varchar(50) NOT NULL,
     Join_Date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    Sex varchar(10) NOT NULL,
+    Sex varchar(20) NOT NULL,
     Age int NOT NULL,
     Weight int NOT NULL, #in pounds (LB)
     Height decimal(5,2) NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE Gym_Owner (
 CREATE TABLE Employee (
     Employee_ID int AUTO_INCREMENT NOT NULL,
     Boss_ID int NOT NULL,
-    Manager_ID int NULL,
+    Manager_ID int,
     FirstName varchar(50) NOT NULL,
     LastName varchar(50) NOT NULL,
     Hire_Date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -160,7 +160,7 @@ CREATE TABLE Meal_Plans (
     Protein_Goal int DEFAULT 0,
     Calories int DEFAULT 0,
     Start_Date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    End_Date date NOT NULL,
+    End_Date datetime NOT NULL,
     PRIMARY KEY (Plan_ID),
     CONSTRAINT fk_13 FOREIGN KEY (User_ID) REFERENCES Client (Client_Id)
         ON DELETE CASCADE
@@ -171,7 +171,7 @@ CREATE TABLE Meals (
     Meal_ID int AUTO_INCREMENT NOT NULL,
     Plan_ID int NOT NULL,
     Name varchar(200) NOT NULL,
-    Type varchar(200) NOT NULL,
+    Type varchar(200),
     Recipe text,
     Ingredients text,
     Fiber_Intake int DEFAULT 0,
@@ -207,7 +207,7 @@ CREATE TABLE Workout_Logs (
     WorkoutLog_ID int AUTO_INCREMENT NOT NULL,
     User_ID int NOT NULL,
     Total_Weight int DEFAULT 0,
-    Total_Time decimal(4,2) DEFAULT 0,
+    Total_Time int DEFAULT 0,
     PRIMARY KEY (WorkoutLog_ID),
     CONSTRAINT fk_17 FOREIGN KEY (User_ID) REFERENCES Client (Client_Id)
         ON DELETE CASCADE
@@ -448,3 +448,4 @@ CREATE TABLE Fitness_Record (
     FOREIGN KEY (User_ID) REFERENCES Client (Client_ID)
         ON DELETE CASCADE
 );
+
