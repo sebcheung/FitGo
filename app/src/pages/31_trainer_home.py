@@ -1,14 +1,11 @@
 import streamlit as st
 from modules.nav import SideBarLinks
 
-# Sidebar navigation
 SideBarLinks()
 
-# Page header and welcome message
 st.header("🏋️ Trainer Dashboard")
 st.write(f"### Welcome, {st.session_state['first_name']}!")
 
-# Main navigation cards
 st.write("### Your Trainer Portal")
 st.write("Select a page to manage your clients and training activities:")
 

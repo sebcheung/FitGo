@@ -4,7 +4,6 @@ from modules.nav import SideBarLinks
 
 SideBarLinks()
 
-# Header
 st.header("💬 Message Board")
 st.write(f"Welcome, {st.session_state['first_name']}!")
 
@@ -16,7 +15,6 @@ with col3:
     if st.button("⬅️ Back"):
         st.switch_page('pages/31_trainer_home.py') 
 
-# Client selection
 st.subheader("Select Client")
 client_id = st.text_input("Enter Client ID:", "1")
 
@@ -52,7 +50,6 @@ with tab1:
 
 with tab2:
     st.subheader("Message Templates")
-    # Message templates
     st.write("**Quick Templates**")
     templates = {
         "Workout Reminder": "Don't forget about our session tomorrow at [time]. Bring water and comfortable clothes.",

@@ -4,7 +4,6 @@ from modules.nav import SideBarLinks
 
 SideBarLinks()
 
-# Page header
 st.header("💪 Workout Plans")
 st.write(f"Welcome, {st.session_state['first_name']}!")
 
@@ -16,7 +15,6 @@ with col3:
     if st.button("⬅️ Back"):
         st.switch_page('pages/31_trainer_home.py') 
 
-# Client selection
 st.subheader("Select Client")
 client_id = st.text_input("Enter Client ID:", "1")
 
@@ -26,7 +24,7 @@ with tab1:
     st.subheader("Current Workout Plan")
     if st.button("View Workout Plan"):
         try:
-            # Fetch workout plan
+            # Fetch workout plan through API
             response = requests.get(f"{BASE_URL}/workout_plans/{client_id}")
             
             if response.ok:
@@ -45,7 +43,7 @@ with tab1:
                     for ex in exercises:
                         st.write(f"• {ex.strip()}")
                     
-                    # Delete option
+                    # Delete plan through API
                     if st.button("Delete This Plan"):
                         delete_resp = requests.delete(f"{BASE_URL}/workout_plans/{client_id}")
                         if delete_resp.ok:
@@ -60,7 +58,7 @@ with tab1:
 
 with tab2:
     st.subheader("Create New Plan")
-    # Form for creating a workout plan
+    # Form for creating a workout plan, have default values for each field
     trainer_id = st.text_input("Trainer ID:", st.session_state.get('user_id', '1'))
     goal = st.selectbox("Goal:", ["Weight Loss", "Muscle Gain", "Endurance", "Strength", "Flexibility"])
     duration = st.number_input("Duration (weeks):", min_value=1, max_value=52, value=8)

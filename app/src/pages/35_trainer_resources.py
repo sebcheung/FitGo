@@ -35,7 +35,6 @@ with st.form("get_health_metrics"):
         else:
             st.error("Failed to fetch health data.")
 
-# Add a new health metric
 st.subheader("➕ Add New Health Metric")
 with st.form("add_health"):
     # Info needed to add a new health metric
@@ -62,7 +61,6 @@ with st.form("add_health"):
         r = requests.post(f"{BASE_URL}/health_metrics", json=payload)
         st.success("Metric added!" if r.ok else "Failed to add metric.")
 
-# Update health metric
 st.subheader("✏️ Update Existing Metric")
 with st.form("update_health"):
     # Info needed to update a metric
@@ -101,7 +99,6 @@ if resp.ok:
 else:
     st.error("Failed to fetch resources.")
 
-# Add a new trainer resource
 st.subheader("➕ Add New Resource")
 with st.form("add_resource"):
     # Info needed to add a new resource

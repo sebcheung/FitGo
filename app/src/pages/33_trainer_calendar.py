@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 from datetime import timedelta
 
-# Change 'web-api' to 'localhost' if running outside Docker
+# Change localhost if running outside Docker
 BASE_URL = "http://web-api:4000/t"
 
 # Button to navigate back to trainer dashboard
@@ -35,7 +35,6 @@ if response.ok:
 else:
     st.error("Failed to fetch training sessions.")
 
-# Add a new training session
 st.subheader("➕ Create New Session")
 
 with st.form("new_session"):
@@ -66,7 +65,6 @@ with st.form("new_session"):
         else:
             st.error("Failed to create session.")
 
-# Cancel a training session
 st.subheader("❌ Cancel Session")
 
 with st.form("cancel_session"):
