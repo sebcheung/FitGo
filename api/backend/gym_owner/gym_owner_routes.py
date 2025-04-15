@@ -52,15 +52,15 @@ def add_employee():
     current_app.logger.info(the_data)
 
     boss_id = the_data['Boss_ID']
-    manager_id = the_data['Manager_ID']
     first = the_data['FirstName']
     last = the_data['LastName']
     age = the_data['Age']
     ssn = the_data['SSN']
     address = the_data['Address']
+    hire_date = the_data['Hire_Date']
 
-    query = f''' INSERT INTO Employee (Boss_ID, Manager_ID, FirstName, LastName, Age, SSN, Address)
-                 VALUES ({int(boss_id)}, {int(manager_id)}, '{first}', '{last}', {int(age)}, '{ssn}', '{address}');
+    query = f''' INSERT INTO Employee (Boss_ID, FirstName, LastName, Age, SSN, Address, Hire_Date)
+                 VALUES ({int(boss_id)}, '{first}', '{last}', {int(age)}, '{ssn}', '{address}', {hire_date});
             '''
   
     current_app.logger.info(query)
@@ -161,24 +161,21 @@ def add_equipment():
 
 # Create route to update data for a specific employee
 @gym_owner.route('/employees', methods = ['PUT'])
-def update_employee(employee_id):
+def update_employee():
     current_app.logger.info('PUT /gym-owner/employees route')
     emp_info = request.json
     emp_id = emp_info['Employee_ID']
     boss_id = emp_info['Boss_ID']
-    manager_id = emp_info['Manager_ID']
     first = emp_info['FirstName']
     last = emp_info['LastName']
-    hire_date = emp_info['Hire_Date']
     age = emp_info['Age']
-    ssn = emp_info['SSN']
     address = emp_info['Address']
 
 
     query = ''' UPDATE Employee 
-                SET Boss_ID = %s, Manager_ID = %s, FirstName = %s, LastName = %s, Hire_Date = %s, Age = %s, SSN = %s, Address = %s
+                SET Boss_ID = %s, FirstName = %s, LastName = %s, Age = %s, Address = %s
                 WHERE Employee_ID = %s '''
-    data = (boss_id, manager_id, first, last, hire_date, age, ssn, address, emp_id)
+    data = (boss_id, first, last, age, address, emp_id)
     cursor = db.get_db().cursor()
     r = cursor.execute(query, data)
     db.get_db().commit()
@@ -236,7 +233,7 @@ def update_equipment():
 @gym_owner.route('/employees/<employee_id>', methods = ['DELETE'])
 def delete_employee(employee_id):
     current_app.logger.info(f'DELETE /gym-owner/employees/{employee_id} route')
-    query = 'DELETE FROM Employee WHERE id = %s'
+    query = 'DELETE FROM Employee WHERE Employee_ID = %s'
     data = (employee_id)
     cursor = db.get_db().cursor()
     cursor.execute(query, data)
