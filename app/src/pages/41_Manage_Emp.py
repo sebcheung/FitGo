@@ -11,6 +11,20 @@ SideBarLinks()
 
 st.write('# Manage Employee Roster')
 
+# Display employee roster
+st.write('## Employee Roster')
+
+roster = requests.get('http://api:4000/go/employees').json()
+
+try:
+    roster_df = pd.DataFrame(roster)
+    cols = ['Employee_ID', 'FirstName', 'LastName', 'Boss_ID', 'Manager_ID', 'Hire_Date', 'Age', 'SSN', 'Address']
+    roster_df = roster_df[cols]
+    st.dataframe(roster_df)
+except:
+    st.write('Could not connect to database to get employee roster!')
+
+# Create form to add new employee
 st.write('## Add Employee')
 
 with st.form('Add a New Employee'):
@@ -43,7 +57,7 @@ with st.form('Add a New Employee'):
         else:
             st.error(f'Failed to add new employee!')
         
-
+# Create form to update an existing employee
 st.write('## Update Employee')
 
 with st.form('Update Information for an Existing Employee'):
@@ -72,6 +86,7 @@ with st.form('Update Information for an Existing Employee'):
         else:
             st.error(f'Failed to update employee {emp_id}')
 
+# Create form to delete an existing employee
 st.write('## Delete Employee')
 
 with st.form('Delete an Existing Employee'):

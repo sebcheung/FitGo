@@ -14,6 +14,20 @@ from backend.db_connection import db
 # Initialize blueprint object
 gym_owner = Blueprint('gym-owner', __name__)
 
+# Create route to get employee roster
+@gym_owner.route('/employees', methods=['GET'])
+def get_employees():
+    current_app.logger.info(f'GET /gym-owner/employees route')
+    cursor = db.get_db().cursor()
+    query = ''' SELECT *
+                FROM Employee
+                ORDER BY Employee_ID ASC; '''
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    the_response = make_response(jsonify(theData))
+    the_response.status_code = 200
+    return the_response
+
 # Create route to get a list of all equipment from a specific gym 
 @gym_owner.route('/equipments/<gym_id>', methods=['GET'])
 def get_equipment(gym_id):
