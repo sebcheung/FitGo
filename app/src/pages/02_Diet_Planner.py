@@ -19,7 +19,7 @@ else:
     st.write("### Welcome to your Diet Planner.")
 
 # Construct API URLs
-MEAL_PLANS_URL = "http://web-api:4000/c/meal_plans/33"
+MEAL_PLANS_URL = "http://web-api:4000/c/meal_plans/31"
 MEALS_URL = "http://web-api:4000/c/meals"
 
 # Function to fetch data from API
