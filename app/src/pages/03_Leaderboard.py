@@ -34,7 +34,7 @@ leaderboard_df = pd.DataFrame(leaderboard_data)
 leaderboard_df.rename(columns={'Total_Points': 'Points', 'Ranks': 'Rank'}, inplace=True)
 
 # Mark current user
-leaderboard_df['IsCurrentUser'] = leaderboard_df['User_ID'] == CURRENT_USER_ID
+leaderboard_df['IsCurrentUser'] = leaderboard_df['User_ID'] == 33
 
 # Try to get current user data from API
 try:
@@ -44,7 +44,7 @@ try:
         current_user_data = response.json()
         if current_user_data and isinstance(current_user_data, list) and len(current_user_data) > 0:
             # Replace the user data in our dataframe with API data
-            leaderboard_df = leaderboard_df[leaderboard_df['User_ID'] != CURRENT_USER_ID]
+            leaderboard_df = leaderboard_df[leaderboard_df['User_ID'] != 33]
             
             # Add API data for current user
             for user_entry in current_user_data:
