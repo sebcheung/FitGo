@@ -82,7 +82,7 @@ def delete_workout_plan(clientID):
 def get_health_metrics(clientID):
     current_app.logger.info('GET /health_metrics/<clientID> route')
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT * FROM health_metrics WHERE client_id = %s', (clientID,))
+    cursor.execute('SELECT * FROM Health_Metrics WHERE User_ID = %s', (clientID,))
     data = cursor.fetchall()
     response = make_response(jsonify(data))
     response.status_code = 200
