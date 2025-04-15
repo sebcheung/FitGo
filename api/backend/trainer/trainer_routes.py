@@ -12,10 +12,10 @@ trainers = Blueprint('trainers', __name__)
 # Retrieve workout plan for client
 @trainers.route('/workout_plans/<clientID>', methods=['GET'])
 def get_workout_plans(clientID):
-    current_app.logger.info('GET /workout_plans/<clientID> route')
+    current_app.logger.info(f'GET /workout_plans/{clientID} route')
     cursor = db.get_db().cursor()
-    query = 'SELECT * FROM Workout_Plans WHERE Client_ID = {0}'.format(clientID)
-    cursor.execute(query, (clientID))
+    query = 'SELECT * FROM Workout_Plans WHERE Client_ID = %s'
+    cursor.execute(query, (clientID,))
     data = cursor.fetchall()
     response = make_response(jsonify(data))
     response.status_code = 200
@@ -206,14 +206,8 @@ from backend.db_connection import db
 from backend.ml_models.model01 import predict
 
 #------------------------------------------------------------
-# Create a new Blueprint object, which is a collection of 
-# routes.
-trainer = Blueprint('trainer', __name__)
-
-
-#------------------------------------------------------------
 # Get all resources the trainer has access to.
-@trainer.route('/resources', methods=['GET'])
+@trainers.route('/resources', methods=['GET'])
 def get_resources():
 
     cursor = db.get_db().cursor()
@@ -229,7 +223,7 @@ def get_resources():
 
 # ------------------------------------------------------------
 # This is a POST route for a trainer to add a new resource entry.
-@trainer.route('/resources', methods=['POST'])
+@trainers.route('/resources', methods=['POST'])
 def add_new_resource():
     
     # In a POST request, there is a 
@@ -250,52 +244,9 @@ def add_new_resource():
                               Trainer_ID)
         VALUES ('{title}', '{url}', '{type}', {trainer_id})
     '''
-#------------------------------------------------------------
-
-#------------------------------------------------------------
-# Create a new Blueprint object, which is a collection of 
-# routes.
-trainer = Blueprint('trainer', __name__)
-
-
-
-#------------------------------------------------------------
-# Get all resources the trainer has access to.
-@trainer.route('/resources', methods=['GET'])
-def get_resources():
-
     cursor = db.get_db().cursor()
-    cursor.execute('''SELECT Resources_ID, Title, URL,
-                    Type, Trainer_ID FROM Resources
-    ''')
-    
-    theData = cursor.fetchall()
-    
-    the_response = make_response(jsonify(theData))
-    the_response.status_code = 200
-    return the_response
+    cursor.execute(query)
+    db.get_db().commit()
+    return 'Resource added!'
 
-# ------------------------------------------------------------
-# This is a POST route for a trainer to add a new resource entry.
-@trainer.route('/resources', methods=['POST'])
-def add_new_resource():
-    
-    # In a POST request, there is a 
-    # collecting data from the request object 
-    the_data = request.json
-    current_app.logger.info(the_data)
-
-    #extracting the variable
-    title = the_data['Title']
-    url = the_data['URL']
-    type = the_data['Type']
-    trainer_id = the_data['Trainer_ID']
-    
-    query = f'''
-        INSERT INTO Resources (Title,
-                              URL,
-                              Type, 
-                              Trainer_ID)
-        VALUES ('{title}', '{url}', '{type}', {trainer_id})
-    '''
 #------------------------------------------------------------

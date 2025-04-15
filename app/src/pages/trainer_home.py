@@ -17,36 +17,40 @@ col1, col2, col3 = st.columns(3)
 
 # Workout plans nav card
 with col1:
-    st.markdown("""
-        <div style="padding: 20px; background-color: #f0f2f6; border-radius:10px; text-align: center; height: 180px;">
-            <h1 style="font-size: 36px; margin-bottom: 10px;">💪</h1?
-            <h3 style="margin-top: 0;">Workout Plans</h3>
+    with st.container():
+        st.markdown("""
+            <div style="padding: 10px; background-color: #f0f2f6; border-radius:10px; text-align: center; height: 280px;">
+                <h1 style="font-size: 36px; margin-bottom: 5px;">💪</h1>
+                <h3 style="margin-top: 0;">Workout Plans</h3>
                 <p>Create and manage personalized exercise programs</p>
-                <a href="workout_plans" target="_self">Go to Workout Plans →</a>
-        </div>
-    """, unsafe_allow_html=True)
+            </div>
+        """, unsafe_allow_html=True)
+        if st.button("Go to Workout Plans", use_container_width=True, key="plans"):
+            st.switch_page('pages/trainer_workout_plans.py')
 
 # Calendar nav card
 with col2:
     st.markdown("""
-        <div style="padding: 20px; background-color: #f0f2f6; border-radius:10px; text-align: center; height: 180px;">
-            <h1 style="font-size: 36px; margin-bottom: 10px;">📅</h1?
+        <div style="padding: 10px; background-color: #f0f2f6; border-radius:10px; text-align: center; height: 280px;">
+            <h1 style="font-size: 36px; margin-bottom: 5px;">📅</h1>
             <h3 style="margin-top: 0;">Training Calendar</h3>
                 <p>Schedule and manage your client sessions</p>
-                <a href="training_calendar" target="_self">Go to Calendar →</a>
         </div>
     """, unsafe_allow_html=True)
+    if st.button("Go to Calendar", use_container_width=True, key="calendar"):
+            st.switch_page('pages/trainer_calendar.py')
 
 # Message board nav card
 with col3:
     st.markdown("""
-        <div style="padding: 20px; background-color: #f0f2f6; border-radius:10px; text-align: center; height: 180px;">
-            <h1 style="font-size: 36px; margin-bottom: 10px;">💬</h1?
+        <div style="padding: 10px; background-color: #f0f2f6; border-radius:10px; text-align: center; height: 280px;">
+            <h1 style="font-size: 36px; margin-bottom: 5px;">💬</h1>
             <h3 style="margin-top: 0;">Message Board</h3>
                 <p>Stay connected with your clients</p>
-                <a href="message_board" target="_self">Go to Messages →</a>
         </div>
     """, unsafe_allow_html=True)
+    if st.button("Go to Messages", use_container_width=True, key="messages"):
+            st.switch_page('pages/trainer_messages.py')
 
 # Page descriptions
 st.write("### What You Can Do")
