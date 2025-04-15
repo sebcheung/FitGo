@@ -9,7 +9,7 @@ from modules.nav import SideBarLinks
 SideBarLinks()
 
 # set the header of the page
-st.markdown('Arnold\'s Workout Logger')
+st.header('Arnold\'s Workout Logger')
 
 api_url = "http://web-api:4000/c/workout_log/33"
 
