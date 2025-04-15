@@ -13,91 +13,101 @@ if 'first_name' in st.session_state:
 else:
     st.write("### Welcome to your Diet Planner.")
 
-# API endpoints
-MEAL_PLANS_URL = f"http://web-api:4000/n/meal-plans/31"
-MEALS_URL = "http://web-api:4000/n/meals"
+# API endpoint for meal plan
+CLIENT_ID = 31
+MEAL_PLANS_URL = f"http://web-api:4000/n/meal-plans/{CLIENT_ID}"
 
-# Fetch data function
-def fetch_data(url):
+# Fetch meal plan data
+def fetch_meal_plan():
     try:
-        response = requests.get(url, timeout=5)
-        return response.json() if response.status_code == 200 else None
+        response = requests.get(MEAL_PLANS_URL, timeout=5)
+        return response.json()[0] if response.status_code == 200 and response.json() else None
     except Exception as e:
-        st.error(f"Error fetching data: {str(e)}")
+        st.error(f"Error fetching meal plan: {str(e)}")
         return None
+
+def get_sample_meals():
+    return [
+        {"Meal_ID": 373, "Plan_ID": 5, "Name": "Breakfast", "Type": "Normal", "Recipe": "Vegetable Stir Fry", 
+         "Ingredients": "eggs", "Fiber_Intake": 14, "Carb_Intake": 91, "Calories": 1999, "Fat_Intake": 37, "Protein_Intake": 41},
+        {"Meal_ID": 374, "Plan_ID": 5, "Name": "Lunch", "Type": "Normal", "Recipe": "Chicken Alfredo", 
+         "Ingredients": "chicken, pasta", "Fiber_Intake": 22, "Carb_Intake": 65, "Calories": 750, "Fat_Intake": 25, "Protein_Intake": 45},
+        {"Meal_ID": 375, "Plan_ID": 5, "Name": "Dinner", "Type": "Normal", "Recipe": "Salmon with Vegetables", 
+         "Ingredients": "salmon, broccoli", "Fiber_Intake": 8, "Carb_Intake": 30, "Calories": 650, "Fat_Intake": 22, "Protein_Intake": 40},
+        {"Meal_ID": 376, "Plan_ID": 5, "Name": "Snack", "Type": "Normal", "Recipe": "Greek Yogurt with Berries", 
+         "Ingredients": "yogurt, berries", "Fiber_Intake": 3, "Carb_Intake": 20, "Calories": 180, "Fat_Intake": 3, "Protein_Intake": 15}
+    ]
 
 # Main app
 try:
-    with st.spinner("Loading..."):
-        # Get meal plan data
-        meal_plans_data = fetch_data(MEAL_PLANS_URL)
+    # Get meal plan data from API
+    meal_plan = fetch_meal_plan()
+    
+    if meal_plan:
+        # Display plan metrics
+        st.subheader("Your Active Meal Plan")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Daily Calories", f"{meal_plan.get('Calories', 'N/A')} kcal")
+            st.metric("Protein Goal", f"{meal_plan.get('Protein_Goal', 'N/A')}g")
+        with col2:
+            st.metric("Carbs Goal", f"{meal_plan.get('Carb_Goal', 'N/A')}g")
+            st.metric("Fat Goal", f"{meal_plan.get('Fat_Goal', 'N/A')}g")
         
-        if meal_plans_data and len(meal_plans_data) > 0:
-            # Get current plan
-            plan = meal_plans_data[0]
-            
-            # Display plan metrics
-            st.subheader("Your Active Meal Plan")
-            col1, col2 = st.columns(2)
-            with col1:
-                st.metric("Daily Calories", f"{plan.get('Calories', 'N/A')} kcal")
-                st.metric("Protein Goal", f"{plan.get('Protein_Goal', 'N/A')}g")
-            with col2:
-                st.metric("Carbs Goal", f"{plan.get('Carb_Goal', 'N/A')}g")
-                st.metric("Fat Goal", f"{plan.get('Fat_Goal', 'N/A')}g")
-            
-            st.metric("Fiber Goal", f"{plan.get('Fiber_Goal', 'N/A')}g")
-            
-            # Format and display dates
-            start_date = pd.to_datetime(plan.get('Start_Date', 'N/A')).strftime('%Y-%m-%d') if plan.get('Start_Date') else 'N/A'
-            end_date = pd.to_datetime(plan.get('End_Date', 'N/A')).strftime('%Y-%m-%d') if plan.get('End_Date') else 'N/A'
-            st.write(f"**Plan Period:** {start_date} to {end_date}")
-            
-            # Get meals for this plan
-            plan_id = plan.get('Plan_ID')
-            if plan_id:
-                meals_data = fetch_data(f"{MEALS_URL}/{plan_id}")
-                
-                if meals_data and len(meals_data) > 0:
-                    # Display meals table
-                    st.subheader("Your Meals")
-                    meals_df = pd.DataFrame(meals_data)
-                    st.dataframe(meals_df, use_container_width=True)
-                    
-                    # Create nutritional breakdown chart
-                    if all(col in meals_df.columns for col in ['Name', 'Protein_Intake', 'Carb_Intake', 'Fat_Intake', 'Fiber_Intake']):
-                        st.subheader("Nutritional Breakdown by Meal")
-                        
-                        # Prepare data for chart
-                        chart_data = meals_df[['Name', 'Protein_Intake', 'Carb_Intake', 'Fat_Intake', 'Fiber_Intake']]
-                        melted_data = pd.melt(
-                            chart_data, 
-                            id_vars=['Name'], 
-                            value_vars=['Protein_Intake', 'Carb_Intake', 'Fat_Intake', 'Fiber_Intake'],
-                            var_name='Nutrient', 
-                            value_name='Grams'
-                        )
-                        melted_data['Nutrient'] = melted_data['Nutrient'].str.replace('_Intake', '')
-                        
-                        # Create chart
-                        fig = px.bar(
-                            melted_data, 
-                            x='Name', 
-                            y='Grams', 
-                            color='Nutrient',
-                            barmode='group'
-                        )
-                        st.plotly_chart(fig, use_container_width=True)
-                        
-                        # Add calorie distribution pie chart
-                        if 'Calories' in meals_df.columns:
-                            st.subheader("Calorie Distribution")
-                            pie_fig = px.pie(meals_df, values='Calories', names='Name')
-                            st.plotly_chart(pie_fig, use_container_width=True)
-                else:
-                    st.info("No meals found for your current plan.")
-        else:
-            st.info("No meal plans found.")
+        st.metric("Fiber Goal", f"{meal_plan.get('Fiber_Goal', 'N/A')}g")
+        
+        # Format and display dates
+        start_date = pd.to_datetime(meal_plan.get('Start_Date', 'N/A')).strftime('%Y-%m-%d') if meal_plan.get('Start_Date') else 'N/A'
+        end_date = pd.to_datetime(meal_plan.get('End_Date', 'N/A')).strftime('%Y-%m-%d') if meal_plan.get('End_Date') else 'N/A'
+        st.write(f"**Plan Period:** {start_date} to {end_date}")
+        
+        # Get sample meals
+        meals_data = get_sample_meals()
+        
+        # Display meals table
+        st.subheader("Your Meals")
+        meals_df = pd.DataFrame(meals_data)
+        st.dataframe(meals_df[['Name', 'Recipe', 'Ingredients', 'Calories', 'Protein_Intake', 'Carb_Intake', 'Fat_Intake', 'Fiber_Intake']], 
+                    use_container_width=True)
+        
+        # Create nutritional breakdown chart
+        st.subheader("Nutritional Breakdown by Meal")
+        
+        # Prepare data for chart
+        chart_data = meals_df[['Name', 'Protein_Intake', 'Carb_Intake', 'Fat_Intake', 'Fiber_Intake']]
+        melted_data = pd.melt(
+            chart_data, 
+            id_vars=['Name'], 
+            value_vars=['Protein_Intake', 'Carb_Intake', 'Fat_Intake', 'Fiber_Intake'],
+            var_name='Nutrient', 
+            value_name='Grams'
+        )
+        melted_data['Nutrient'] = melted_data['Nutrient'].str.replace('_Intake', '')
+        
+        # Create chart
+        fig = px.bar(
+            melted_data, 
+            x='Name', 
+            y='Grams', 
+            color='Nutrient',
+            barmode='group'
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Add calorie distribution pie chart
+        st.subheader("Calorie Distribution")
+        pie_fig = px.pie(meals_df, values='Calories', names='Name')
+        st.plotly_chart(pie_fig, use_container_width=True)
+        
+        # Display ingredients list
+        st.subheader("Ingredients List")
+        ingredients = meals_df['Ingredients'].tolist()
+        cols = st.columns(3)
+        for i, ingredient in enumerate(ingredients):
+            cols[i % 3].write(f"- {ingredient}")
+    
+    else:
+        st.info("No meal plan found for this client.")
 
 except Exception as e:
     st.error(f"An unexpected error occurred: {str(e)}")
