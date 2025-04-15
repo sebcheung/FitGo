@@ -28,6 +28,20 @@ def get_employees():
     the_response.status_code = 200
     return the_response
 
+# Create route to get client roster
+@gym_owner.route('/clients', methods=['GET'])
+def get_clients():
+    current_app.logger.info(f'GET /gym-owner/clients route')
+    cursor = db.get_db().cursor()
+    query = ''' SELECT *
+                FROM Client
+                ORDER BY Client_ID ASC; '''
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    the_response = make_response(jsonify(theData))
+    the_response.status_code = 200
+    return the_response
+
 # Create route to get a list of all equipment from a specific gym 
 @gym_owner.route('/equipments/<gym_id>', methods=['GET'])
 def get_equipment(gym_id):
@@ -48,7 +62,7 @@ def get_equipment(gym_id):
 def get_participants():
     current_app.logger.info(f'GET /gym-owner/events route')
     cursor = db.get_db().cursor()
-    query = ''' SELECT e.Event_ID, e.Event_Name, COUNT(ea.Client_ID) AS num_attendees
+    query = ''' SELECT e.Event_ID, e.Event_Name, e.Event_Date, e.Host_Name, COUNT(ea.Client_ID) AS Attendees
                 FROM Event e 
                     JOIN Event_Attendee ea ON e.Event_ID = ea.Event_ID
                 GROUP BY e.event_id, e.event_name

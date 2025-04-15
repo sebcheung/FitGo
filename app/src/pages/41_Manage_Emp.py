@@ -13,9 +13,9 @@ st.write('# Manage Employee Roster')
 
 # Display employee roster
 st.write('## Employee Roster')
-
+ 
 roster = requests.get('http://api:4000/go/employees').json()
-
+ 
 try:
     roster_df = pd.DataFrame(roster)
     cols = ['Employee_ID', 'FirstName', 'LastName', 'Boss_ID', 'Manager_ID', 'Hire_Date', 'Age', 'SSN', 'Address']

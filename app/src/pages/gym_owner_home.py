@@ -24,15 +24,10 @@ if st.button('Manage Client Roster',
              use_container_width=True):
   st.switch_page('pages/02_Diet_Planner.py')
 
-if st.button('Create or Cancel Events', 
+if st.button('Manage Events', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/03_Leaderboard.py')
-
-if st.button('View Event Participant Lists', 
-             type='primary',
-             use_container_width=True):
-  st.switch_page('pages/04_Stats.py')
+  st.switch_page('pages/43_Manage_Events.py')
 
 if st.button('Equipment Manager', 
              type='primary',

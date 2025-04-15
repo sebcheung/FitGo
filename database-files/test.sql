@@ -4,3 +4,5 @@ select * from Employee
 order by Employee.Employee_ID desc;
 
 select * from Client;
+
+select * from Event
