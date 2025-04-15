@@ -10,6 +10,12 @@ st.write(f"Welcome, {st.session_state['first_name']}!")
 
 BASE_URL = "http://web-api:4000/t"
 
+# Button to navigate back to trainer dashboard
+col1, col2, col3 = st.columns([8, 1, 1])
+with col3:
+    if st.button("⬅️ Back"):
+        st.switch_page('pages/31_trainer_home.py') 
+
 # Client selection
 st.subheader("Select Client")
 client_id = st.text_input("Enter Client ID:", "1")

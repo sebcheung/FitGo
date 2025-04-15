@@ -5,6 +5,13 @@ import requests
 BASE_URL = "http://web-api:4000/t"
 
 st.set_page_config(layout="wide")
+
+# Button to navigate back to trainer dashboard
+col1, col2, col3 = st.columns([8, 1, 1])
+with col3:
+    if st.button("⬅️ Back"):
+        st.switch_page('pages/31_trainer_home.py') 
+
 st.title("🏥 Health Metrics & 📚 Trainer Resources")
 
 trainer_id = st.session_state.get("user_id", 1)

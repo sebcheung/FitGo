@@ -1,19 +1,22 @@
 import streamlit as st
 import pandas as pd
 import requests
-import plotly.express as px
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 # Change 'web-api' to 'localhost' if running outside Docker
 BASE_URL = "http://web-api:4000/t"
+
+# Button to navigate back to trainer dashboard
+col1, col2, col3 = st.columns([8, 1, 1])
+with col3:
+    if st.button("⬅️ Back"):
+        st.switch_page('pages/31_trainer_home.py') 
 
 # Get trainer ID from session
 trainer_id = st.session_state.get("user_id", "1")
 st.header("📅 Training Calendar")
 
-# Retrieve sessions for the trainer
-st.subheader("📥 Scheduled Sessions")
-
+# Retrieve currently scheduled training sessions through the API
 response = requests.get(f"{BASE_URL}/training_session/{trainer_id}")
 
 if response.ok:
@@ -23,21 +26,6 @@ if response.ok:
         df = pd.DataFrame(sessions)
         df["Date_time"] = pd.to_datetime(df["Date_time"])
         df["End_time"] = df["Date_time"] + timedelta(hours=1)
-
-        # Calendar View
-        st.subheader("📊 Calendar View")
-        calendar = px.timeline(
-            df,
-            x_start="Date_time",
-            x_end="End_time",
-            y="Client_ID",
-            color="Status",
-            hover_data=["Class_description", "Session_ID"],
-            title="Trainer Schedule"
-        )
-        calendar.update_yaxes(categoryorder="total ascending")
-        calendar.update_layout(height=500, margin={"t": 50, "b": 20})
-        st.plotly_chart(calendar, use_container_width=True)
 
         # Data Table
         st.subheader("📋 Upcoming Sessions")
