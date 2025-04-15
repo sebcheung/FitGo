@@ -144,6 +144,36 @@ def update_health_metrics(recordID):
     return 'health metric updated successfully!'
 
 # ----------------------------------------------
+# Retrieve training session info for a client
+@trainers.route('/training_session/<trainer_id>', methods=['GET'])
+def get_training_session(trainer_id):
+
+    query = f'''SELECT Session_ID, 
+                       Client_ID, 
+                       Status, 
+                       Date_time,
+                       Class_description,
+                       Max_participants 
+                FROM Training_Session 
+                WHERE Trainer_ID = {str(trainer_id)}
+    '''
+    
+    current_app.logger.info(f'GET /workout_log/<trainer_id> query={query}')
+
+    # get the database connection, execute the query, and 
+    # fetch the results as a Python Dictionary
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    # Check if data received is what is expected.
+    current_app.logger.info(f'GET /workout_log/<trainer_id> Result of query = {theData}')
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+# ----------------------------------------------
 # Add a new training session for a client
 @trainers.route('/training_session/<clientID>', methods=['POST'])
 def add_training_session(clientID):
@@ -193,17 +223,7 @@ def send_message_to_client(clientID):
     cursor = db.get_db().cursor()
     cursor.execute(query, data)
     db.get_db().commit()
-    return 'message sent to client.'########################################################
-# Sample customers blueprint of endpoints
-# Remove this file if you are not using it in your project
-########################################################
-from flask import Blueprint
-from flask import request
-from flask import jsonify
-from flask import make_response
-from flask import current_app
-from backend.db_connection import db
-from backend.ml_models.model01 import predict
+    return 'message sent to client.'
 
 #------------------------------------------------------------
 # Get all resources the trainer has access to.
@@ -248,5 +268,3 @@ def add_new_resource():
     cursor.execute(query)
     db.get_db().commit()
     return 'Resource added!'
-
-#------------------------------------------------------------

@@ -70,7 +70,7 @@ if st.button("Act as Jordan, a Personal Trainer",
     # finally, we ask streamlit to switch to another page, in this case, the 
     # landing page for this particular user type
     logger.info("Logging in as Trainer Persona")
-    st.switch_page('pages/trainer_home.py')
+    st.switch_page('pages/31_trainer_home.py')
 
 if st.button('Act as Mohammad, an USAID worker', 
             type = 'primary', 
