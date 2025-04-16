@@ -1,6 +1,5 @@
 ########################################################
 # Gym owner blueprint of endpoints 
-# NEED TO TEST TO SEE HOW TO HANDLE DATETIME VARIABLES
 ########################################################
 
 # Import libraries and modules

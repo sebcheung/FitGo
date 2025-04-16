@@ -88,7 +88,7 @@ if st.button('Act as Jim Gold, a Gym Owner',
     st.session_state['authenticated'] = True
     st.session_state['role'] = 'gym_owner'
     st.session_state['first_name'] = 'Jim'
-    st.switch_page('pages/gym_owner_home.py')
+    st.switch_page('pages/20_gym_owner_home.py')
 
 
 

@@ -86,6 +86,32 @@ def Meal_Plan_Manager():
         "pages/43_nutritionist_mealPlan_manager.py", label="Meal Plan Manager", icon="📋"
     )
 
+#### ------------------------ For Role of Gym Owner --------------------------------------
+def GymOwnerHomeNav():
+    st.sidebar.page_link(
+        "pages/20_gym_owner_home.py", label="Gym Owner Home", icon="🧑‍💼"
+    )
+
+def Employees():
+    st.sidebar.page_link(
+        "pages/21_Manage_Emp.py", label="Manage Employee Roster", icon="🧑‍💻"
+    )
+
+def Clients():
+    st.sidebar.page_link(
+        "pages/22_Manage_Clients.py", label="Manage Client Roster", icon="🤸"
+    )
+
+def Events():
+    st.sidebar.page_link(
+        "pages/23_Manage_Events.py", label="Manage Events", icon="🎪"
+    )
+
+def Equipment():
+    st.sidebar.page_link(
+        "pages/24_Manage_Equip.py", label="Manage Equipment", icon="🏀"
+    )
+
 # --------------------------------Links Function -----------------------------------------------
 def SideBarLinks(show_home=False):
     """
@@ -128,6 +154,14 @@ def SideBarLinks(show_home=False):
             Restrictions()
             Meal_Manager()
             Meal_Plan_Manager()
+        
+        # If the user is Nutritionist, show Restrictions, Meal Manager, and Meal Plan Manager
+        if st.session_state["role"] == "gym_owner":
+            GymOwnerHomeNav()
+            Employees()
+            Clients()
+            Events()
+            Equipment()
 
     # Always show the About page at the bottom of the list of links
     AboutPageNav()
