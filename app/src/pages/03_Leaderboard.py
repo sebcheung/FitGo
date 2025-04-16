@@ -7,73 +7,66 @@ import plotly.express as px
 
 SideBarLinks()
 st.header('FitGo Leaderboard 🏆')
+
 if 'first_name' in st.session_state:
     st.write(f"### Hi, {st.session_state['first_name']}!")
+API_URL = f"http://web-api:4000/c/leaderboard/33"
 
-# API endpoint for current user
-USER_LEADERBOARD_URL = "http://web-api:4000/c/leaderboard/33"
-
-# Create dataframe with leaderboard entries from sample data
-leaderboard_data = [
-    {"Leaderboard_ID": 21, "User_ID": 33, "Username": "FitFan123", "Ranks": 16, "Total_Points": 389, "Region": "Colorado"},
-    {"Leaderboard_ID": 1, "User_ID": 35, "Username": "PowerLifter404", "Ranks": 25, "Total_Points": 668, "Region": "Guarda"},
-    {"Leaderboard_ID": 2, "User_ID": 39, "Username": "GymGuru456", "Ranks": 12, "Total_Points": 841, "Region": "Lisboa"},
-    {"Leaderboard_ID": 3, "User_ID": 10, "Username": "YogaYogi505", "Ranks": 20, "Total_Points": 387, "Region": "Lisboa"},
-    {"Leaderboard_ID": 4, "User_ID": 24, "Username": "RunRanger606", "Ranks": 23, "Total_Points": 843, "Region": "Porto"},
-    {"Leaderboard_ID": 5, "User_ID": 12, "Username": "MuscleManiac101", "Ranks": 33, "Total_Points": 557, "Region": "Lisbon"},
-    {"Leaderboard_ID": 14, "User_ID": 14, "Username": "SweatSquad789", "Ranks": 2, "Total_Points": 751, "Region": "Porto"},
-    {"Leaderboard_ID": 28, "User_ID": 2, "Username": "CardioQueen202", "Ranks": 13, "Total_Points": 841, "Region": "Michigan"},
-    {"Leaderboard_ID": 45, "User_ID": 5, "Username": "IronWarrior707", "Ranks": 16, "Total_Points": 988, "Region": "Barcelona"}
+# Sample leaderboard data (top 10)
+sample_data = [
+    {'Username': 'Alice', 'Rank': 1, 'Points': 1520, 'Region': 'East'},
+    {'Username': 'Bob', 'Rank': 2, 'Points': 1400, 'Region': 'West'},
+    {'Username': 'Charlie', 'Rank': 3, 'Points': 1375, 'Region': 'South'},
+    {'Username': 'Diana', 'Rank': 4, 'Points': 1320, 'Region': 'East'},
+    {'Username': 'Evan', 'Rank': 5, 'Points': 1280, 'Region': 'North'},
+    {'Username': 'Fay', 'Rank': 6, 'Points': 1250, 'Region': 'West'},
+    {'Username': 'George', 'Rank': 7, 'Points': 1200, 'Region': 'East'},
+    {'Username': 'Hannah', 'Rank': 8, 'Points': 1150, 'Region': 'North'},
+    {'Username': 'Ian', 'Rank': 9, 'Points': 1100, 'Region': 'South'},
+    {'Username': 'Jane', 'Rank': 10, 'Points': 1050, 'Region': 'West'},
 ]
 
-# Convert to DataFrame and rename columns
-leaderboard_df = pd.DataFrame(leaderboard_data)
-leaderboard_df.rename(columns={'Total_Points': 'Points', 'Ranks': 'Rank'}, inplace=True)
+# Fetch current user leaderboard entry
+def fetch_user_entry():
+    try:
+        response = requests.get(API_URL, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            if data:
+                row = data[0]
+                return {
+                    'Username': row['Username'],
+                    'Rank': row.get('Ranks', '?'),
+                    'Points': row.get('Total_Points', 0),
+                    'Region': row.get('Region', 'UNKNOWN'),
+                    'IsCurrentUser': True
+                }
+    except Exception as e:
+        st.warning(f"Unable to retrieve your leaderboard entry: {str(e)}")
+    return None
 
-# Mark current user
-leaderboard_df['IsCurrentUser'] = leaderboard_df['User_ID'] == 33
+# Build leaderboard dataframe
+leaderboard_df = pd.DataFrame(sample_data)
+leaderboard_df['IsCurrentUser'] = False
 
-# Try to get current user data from API
-try:
-    response = requests.get(USER_LEADERBOARD_URL, timeout=5)
-    
-    if response.status_code == 200:
-        current_user_data = response.json()
-        if current_user_data and isinstance(current_user_data, list) and len(current_user_data) > 0:
-            # Replace the user data in our dataframe with API data
-            leaderboard_df = leaderboard_df[leaderboard_df['User_ID'] != 33]
-            
-            # Add API data for current user
-            for user_entry in current_user_data:
-                # Rename keys to match our DataFrame
-                if 'Total_Points' in user_entry:
-                    user_entry['Points'] = user_entry.pop('Total_Points')
-                if 'Ranks' in user_entry:
-                    user_entry['Rank'] = user_entry.pop('Ranks')
-                user_entry['IsCurrentUser'] = True
-                
-                # Add to DataFrame
-                leaderboard_df = pd.concat([leaderboard_df, pd.DataFrame([user_entry])], ignore_index=True)
-except Exception as e:
-    st.sidebar.warning(f"Could not fetch your data: {str(e)}")
+user_entry = fetch_user_entry()
+if user_entry:
+    if user_entry['Username'] not in leaderboard_df['Username'].values:
+        leaderboard_df = pd.concat([leaderboard_df, pd.DataFrame([user_entry])], ignore_index=True)
 
-# Create tabs
-tab1, tab2 = st.tabs(["Rankings", "Regions"])
+leaderboard_df = leaderboard_df.sort_values(by='Points', ascending=False)
+
+# Tabs for UI
+tab1, tab2, tab3 = st.tabs(["Rankings", "Regions", "Manage Profile"])
 
 with tab1:
-    # Sort by points (descending)
-    sorted_df = leaderboard_df.sort_values(by='Points', ascending=False)
-    
-    # Find current user's position
-    user_position = sorted_df.reset_index().index[sorted_df['IsCurrentUser']].tolist()
-    user_position = user_position[0] + 1 if user_position else None
-    
-    if user_position:
-        st.success(f"Your position in the leaderboard: #{user_position}")
-    
-    # Create bar chart for top 10
+    if user_entry:
+        user_pos = leaderboard_df.reset_index().index[leaderboard_df['IsCurrentUser']].tolist()
+        if user_pos:
+            st.success(f"Your position in the leaderboard: #{user_pos[0] + 1}")
+
     fig = px.bar(
-        sorted_df.head(10),
+        leaderboard_df.head(10),
         x='Username',
         y='Points',
         color='IsCurrentUser',
@@ -81,15 +74,12 @@ with tab1:
         title='Top 10 Users by Points'
     )
     st.plotly_chart(fig, use_container_width=True)
-    
-    # Display table with highlighting
+
     st.subheader("Leaderboard Rankings")
-    
-    # Use st.dataframe with styling to highlight current user
-    styled_df = sorted_df[['Username', 'Rank', 'Points', 'Region']]
+    display_df = leaderboard_df[['Username', 'Rank', 'Points', 'Region']]
     st.dataframe(
-        styled_df.style.apply(
-            lambda x: ['background-color: #ffddbb' if sorted_df.iloc[x.name]['IsCurrentUser'] else '' for _ in range(len(x))],
+        display_df.style.apply(
+            lambda row: ['background-color: #ffe0b2' if leaderboard_df.iloc[row.name]['IsCurrentUser'] else '' for _ in row],
             axis=1
         ),
         use_container_width=True,
@@ -97,31 +87,121 @@ with tab1:
     )
 
 with tab2:
-    # Show regions with data
-    regions_df = leaderboard_df[leaderboard_df['Region'].notna()]
-    
-    if len(regions_df) > 0:
-        # Group by region
-        region_stats = regions_df.groupby('Region').agg(
+    if 'Region' in leaderboard_df.columns:
+        region_stats = leaderboard_df.groupby('Region').agg(
             Users=('Username', 'count'),
             Avg_Points=('Points', 'mean')
         ).reset_index()
-        
-        # Display region chart
-        region_fig = px.bar(
-            region_stats,
-            x='Region',
-            y='Avg_Points',
-            title='Average Points by Region'
+
+        st.plotly_chart(
+            px.bar(region_stats, x='Region', y='Avg_Points', title='Average Points by Region'),
+            use_container_width=True
         )
-        st.plotly_chart(region_fig, use_container_width=True)
-        
-        # Find user's region
-        user_region = leaderboard_df.loc[leaderboard_df['IsCurrentUser'], 'Region'].values
-        if len(user_region) > 0 and pd.notna(user_region[0]):
-            st.info(f"Your region: {user_region[0]}")
-        
-        # Display region stats
+
+        if user_entry:
+            st.info(f"Your region: {user_entry['Region']}")
+
         st.dataframe(region_stats, use_container_width=True)
-    else:
-        st.info("No regional data available")
+
+with tab3:
+    st.subheader("Manage Your Profile")
+
+    # Create a radio button to choose between updating and creating a profile
+    action = st.radio("Select Action", ["Update My Profile", "Create New Profile"])
+
+    if action == "Update My Profile":
+        st.write("Update your leaderboard information")
+        
+        # Pre-fill form if user exists
+        username = st.text_input("Username", 
+                              value=user_entry['Username'] if user_entry else "")
+        
+        rank = st.number_input("Rank", 
+                            min_value=1, 
+                            value=int(user_entry['Rank']) if user_entry and user_entry['Rank'] != '?' else 1)
+        
+        points = st.number_input("Points", 
+                              min_value=0, 
+                              value=int(user_entry['Points']) if user_entry else 0)
+        
+        region = st.text_input("Region", 
+                            value=user_entry['Region'] if user_entry else "")
+        
+        profile_pic = st.selectbox("Profile Picture", 
+                               options=["profile1.jpeg", "profile2.jpeg", "profile3.jpeg", 
+                                       "profile4.jpeg", "profile5.jpeg"],
+                               index=0)
+        
+        if st.button("Update Profile"):
+            # Prepare data for API
+            update_data = {
+                "Username": username,
+                "Ranks": int(rank),
+                "Total_Points": int(points),
+                "Region": region,
+                "Profile_Pic": profile_pic
+            }
+            
+            try:
+                # Send PUT request to update profile
+                response = requests.put(API_URL, json=update_data, timeout=5)
+                
+                if response.status_code == 200:
+                    st.success("Profile updated successfully!")
+                    # Refresh the page
+                    st.rerun()
+                else:
+                    st.error(f"Failed to update profile. Status code: {response.status_code}")
+                    if hasattr(response, 'text') and response.text:
+                        st.error(f"Error details: {response.text}")
+            
+            except Exception as e:
+                st.error(f"Error updating profile: {str(e)}")
+
+    else:  # Create New Profile
+        st.write("Create a new leaderboard profile")
+        
+        username = st.text_input("Username", "")
+        rank = st.number_input("Rank", min_value=1, value=1)
+        points = st.number_input("Points", min_value=0, value=0)
+        region = st.text_input("Region", "")
+        profile_pic = st.selectbox("Profile Picture", 
+                               options=["profile1.jpeg", "profile2.jpeg", "profile3.jpeg", 
+                                       "profile4.jpeg", "profile5.jpeg"])
+        
+        if st.button("Create Profile"):
+            # Prepare data for API
+            new_profile_data = {
+                "Username": username,
+                "Ranks": int(rank),
+                "Total_Points": int(points),
+                "Region": region,
+                "Profile_Pic": profile_pic
+            }
+            
+            try:
+                # Send POST request to create new profile
+                response = requests.post(API_URL, json=new_profile_data, timeout=5)
+                
+                if response.status_code == 201:
+                    st.success("New profile created successfully!")
+                    # Refresh the page
+                    st.rerun()
+                else:
+                    st.error(f"Failed to create profile. Status code: {response.status_code}")
+                    if hasattr(response, 'text') and response.text:
+                        st.error(f"Error details: {response.text}")
+            
+            except Exception as e:
+                st.error(f"Error creating profile: {str(e)}")
+
+    # Add a section for tips
+    with st.expander("Leaderboard Tips"):
+        st.markdown("""
+        ### Tips for climbing the leaderboard:
+        
+        - Complete workouts consistently to earn more points
+        - Join challenges to boost your ranking
+        - Connect with friends in your region for friendly competition
+        - Update your profile regularly to ensure accurate ranking
+        """)
