@@ -14,7 +14,7 @@ if 'first_name' in st.session_state:
 else:
     st.write("### Welcome to your Diet Planner.")
 MEAL_PLANS_URL = f"http://web-api:4000/n/meal-plans/{client_id}"
-MEALS_URL = f"http://web-api:4000/n/meals"
+MEALS_URL = "http://web-api:4000/n/meals"
 
 # Fetch meal plan data
 def fetch_meal_plan():
