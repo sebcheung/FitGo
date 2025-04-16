@@ -12,7 +12,7 @@ st.write(f"### Welcome, {st.session_state['first_name']}!")
 
 client_id = st.text_input("Enter Client ID:", "1")
 
-BASE_URL = "http://localhost:4000"
+BASE_URL = "http://web-api:4000/n"
 
 # Create Meal Plan 
 st.subheader("🆕 Create New Meal Plan")

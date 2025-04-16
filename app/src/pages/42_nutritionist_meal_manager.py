@@ -8,7 +8,7 @@ SideBarLinks()
 st.header("🍽️ Meals Manager")
 st.write(f"### Welcome, {st.session_state['first_name']}!")
 
-BASE_URL = "http://localhost:4000"
+BASE_URL = "http://web-api:4000/n"
 
 # View Meals 
 st.subheader("📄 View All Meals")

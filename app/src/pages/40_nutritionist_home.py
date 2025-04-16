@@ -17,7 +17,7 @@ st.write(f"### Welcome, {st.session_state['first_name']}!")
 # Input for selecting client
 client_id = st.text_input("Enter Client ID to view health & nutrition data:", "1")
 
-BASE_URL = "http://localhost:4000"
+BASE_URL = "http://web-api:4000/n"
 
 if st.button("Load Client Data"):
     # ----------------- Meal Plans -----------------
