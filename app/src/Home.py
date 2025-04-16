@@ -79,7 +79,7 @@ if st.button('Act as Apple Smith, a certified Nutritionist',
     st.session_state['authenticated'] = True
     st.session_state['role'] = 'nutritionist'
     st.session_state['first_name'] = 'Apple'
-    st.switch_page('pages/nutritionist_home.py')
+    st.switch_page('pages/40_nutritionist_home.py')
 
 # Gym owner persona authenitication
 if st.button('Act as Jim Gold, a Gym Owner', 
