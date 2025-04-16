@@ -122,10 +122,12 @@ def SideBarLinks(show_home=False):
             TrainerWorkoutPlans()
             Resources()
 
-        # If the user is Nutritionist, show Restrictions
+        # If the user is Nutritionist, show Restrictions, Meal Manager, and Meal Plan Manager
         if st.session_state["role"] == "nutritionist":
             NutritionistHomeNav()
             Restrictions()
+            Meal_Manager()
+            Meal_Plan_Manager()
 
     # Always show the About page at the bottom of the list of links
     AboutPageNav()
