@@ -5,15 +5,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 from modules.nav import SideBarLinks
 
-# Set up basic page
 SideBarLinks()
 st.header('Health Metrics Dashboard')
-
-# Access the session state for personalization
 if 'first_name' in st.session_state:
     st.write(f"### Client: {st.session_state['first_name']}")
 
-# API endpoint - note the /t prefix for trainer routes
+# API endpoint 
 METRICS_URL = "http://web-api:4000/t/health_metrics/33"
 
 # Fetch health metrics data

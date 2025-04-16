@@ -5,18 +5,15 @@ import requests
 from modules.nav import SideBarLinks
 import plotly.express as px
 
-# Set up basic page
 SideBarLinks()
 st.header('FitGo Leaderboard 🏆')
-
-# Access the session state for personalization
 if 'first_name' in st.session_state:
     st.write(f"### Hi, {st.session_state['first_name']}!")
 
 # API endpoint for current user
-USER_LEADERBOARD_URL = f"http://web-api:4000/c/leaderboard/33"
+USER_LEADERBOARD_URL = "http://web-api:4000/c/leaderboard/33"
 
-# Create dataframe with leaderboard entries (using data from SQL insert statements)
+# Create dataframe with leaderboard entries from sample data
 leaderboard_data = [
     {"Leaderboard_ID": 21, "User_ID": 33, "Username": "FitFan123", "Ranks": 16, "Total_Points": 389, "Region": "Colorado"},
     {"Leaderboard_ID": 1, "User_ID": 35, "Username": "PowerLifter404", "Ranks": 25, "Total_Points": 668, "Region": "Guarda"},

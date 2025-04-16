@@ -5,7 +5,6 @@ import requests
 import plotly.express as px
 from modules.nav import SideBarLinks
 
-# Set up page
 SideBarLinks()
 st.header('Arnold\'s Diet Planner')
 if 'first_name' in st.session_state:
@@ -13,9 +12,7 @@ if 'first_name' in st.session_state:
 else:
     st.write("### Welcome to your Diet Planner.")
 
-# API endpoint for meal plan
-CLIENT_ID = 31
-MEAL_PLANS_URL = f"http://web-api:4000/n/meal-plans/{CLIENT_ID}"
+MEAL_PLANS_URL = f"http://web-api:4000/n/meal-plans/31"
 
 # Fetch meal plan data
 def fetch_meal_plan():
@@ -38,7 +35,6 @@ def get_sample_meals():
          "Ingredients": "yogurt, berries", "Fiber_Intake": 3, "Carb_Intake": 20, "Calories": 180, "Fat_Intake": 3, "Protein_Intake": 15}
     ]
 
-# Main app
 try:
     # Get meal plan data from API
     meal_plan = fetch_meal_plan()
