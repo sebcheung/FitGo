@@ -155,7 +155,7 @@ def SideBarLinks(show_home=False):
             Meal_Manager()
             Meal_Plan_Manager()
         
-        # If the user is Nutritionist, show Restrictions, Meal Manager, and Meal Plan Manager
+        # If the user is Gym Owner, show Employee, Client, Events, and Equipment Managers
         if st.session_state["role"] == "gym_owner":
             GymOwnerHomeNav()
             Employees()
