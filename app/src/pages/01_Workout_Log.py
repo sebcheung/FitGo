@@ -100,8 +100,8 @@ with tab2:
                 
                 if response.status_code == 201:
                     st.success("Workout successfully logged!")
-                    # Refresh the page to show the updated list
-                    st.experimental_rerun()
+                    # Instead of rerun, use a flag in session state to trigger a refresh
+                    st.session_state.workout_submitted = True
                 else:
                     st.error(f"Failed to log workout. Status code: {response.status_code}")
                     if hasattr(response, 'text') and response.text:
@@ -121,3 +121,16 @@ with tab2:
         - Record your perceived exertion for better tracking over time
         - Include any modifications or variations in the notes section
         """)
+
+# Check if we need to refresh the page
+if st.session_state.get('workout_submitted', False):
+    # Reset the flag
+    st.session_state.workout_submitted = False
+    # Show a message
+    st.info("Refreshing data...")
+    # Use Javascript to do a page refresh without the experimental_rerun
+    st.markdown("""
+    <script>
+        window.location.reload();
+    </script>
+    """, unsafe_allow_html=True)
