@@ -3,7 +3,6 @@ import pandas as pd
 import requests
 from modules.nav import SideBarLinks
 
-# Setup page
 SideBarLinks()
 st.title("🏥 Health Metrics & 📚 Trainer Resources")
 
