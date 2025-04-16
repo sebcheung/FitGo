@@ -17,20 +17,20 @@ st.write('### What would you like to do today?')
 if st.button('Manage Employee Roster', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/41_Manage_Emp.py')
+  st.switch_page('pages/21_Manage_Emp.py')
 
 if st.button('Manage Client Roster', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/02_Diet_Planner.py')
+  st.switch_page('pages/22_Manage_Clients.py')
 
 if st.button('Manage Events', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/43_Manage_Events.py')
+  st.switch_page('pages/23_Manage_Events.py')
 
-if st.button('Equipment Manager', 
+if st.button('Manage Equipment', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/04_Stats.py')
+  st.switch_page('pages/24_Manage_Equip.py')
 

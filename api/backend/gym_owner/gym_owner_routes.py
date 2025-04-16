@@ -47,7 +47,7 @@ def get_clients():
 def get_equipment(gym_id):
     current_app.logger.info(f'GET /gym-owner/equipments/{gym_id} route')
     cursor = db.get_db().cursor()
-    query = ''' SELECT Name, Type, Brand, Purchase_Date, Status
+    query = ''' SELECT Equipment_ID, Name, Type, Brand, Purchase_Date, Status
                 FROM Equipment
                 WHERE Gym_ID = %s '''
     data = (gym_id)
@@ -115,9 +115,10 @@ def add_client():
     weight = the_data['Weight']
     height = the_data['Height']
     phone = the_data['Phone']
+    join_date = the_data['Join_Date']
         
-    query = f''' INSERT INTO Client (FirstName, LastName, Email, Sex, Age, Weight, Height, Phone_Number)
-                 VALUES ('{first}', '{last}', '{email}', '{sex}', {int(age)}, {int(weight)}, {float(height)}, '{phone}')
+    query = f''' INSERT INTO Client (FirstName, LastName, Email, Sex, Age, Weight, Height, Phone_Number, Join_Date)
+                 VALUES ('{first}', '{last}', '{email}', '{sex}', {int(age)}, {int(weight)}, {float(height)}, '{phone}', '{join_date}')
             '''
   
     current_app.logger.info(query)
@@ -214,11 +215,10 @@ def update_employee():
 def update_client():
     current_app.logger.info('PUT /gym-owner/clients route')
     client_info = request.json
-    client_id = client_info['Employee_ID']
+    client_id = client_info['Client_ID']
     first = client_info['FirstName']
     last = client_info['LastName']
     email = client_info['Email']
-    join_date = client_info['Join_Date']
     sex = client_info['Sex']
     age = client_info['Age']
     weight = client_info['Weight']
@@ -227,35 +227,31 @@ def update_client():
 
 
     query = ''' UPDATE Client 
-                SET FirstName = %s, LastName = %s, Email = %s, Join_Date = %s, Sex = %s, Age = %s, Weight = %s, Height = %s, Phone_Number = %s
+                SET FirstName = %s, LastName = %s, Email = %s, Sex = %s, Age = %s, Weight = %s, Height = %s, Phone_Number = %s
                 WHERE Client_ID = %s '''
-    data = (first, last, email, join_date, sex, age, weight, height, phone, client_id)
+    data = (first, last, email, sex, age, weight, height, phone, client_id)
     cursor = db.get_db().cursor()
     r = cursor.execute(query, data)
     db.get_db().commit()
     return 'Client Record Updated!'
 
-# Create route to update data for a specific piece of equipment
+# Create route to update status for a specific piece of equipment
 @gym_owner.route('/equipments', methods = ['PUT'])
 def update_equipment():
     current_app.logger.info('PUT /gym-owner/equipments route')
     equip_info = request.json
     equip_id = equip_info['Equipment_ID']
     gym_id = equip_info['Gym_ID']
-    type = equip_info['Type']
-    purchase_date = equip_info['Purchase_Date']
-    name = equip_info['Name']
     status = equip_info['Status']
-    brand = equip_info['Brand']
 
     query = ''' UPDATE Equipment 
-                SET Gym_ID = %s, Type = %s, Purchase_Date = %s, Name = %s, Status = %s, Brand = %s, 
-                WHERE Equipment_ID = %s '''
-    data = (gym_id, type, purchase_date, name, status, brand, equip_id)
+                SET Status = %s
+                WHERE Equipment_ID = %s AND Gym_ID = %s'''
+    data = (status, equip_id, gym_id)
     cursor = db.get_db().cursor()
     r = cursor.execute(query, data)
     db.get_db().commit()
-    return 'Equipment Record Updated!'
+    return 'Equipment Status Updated!'
 
 # Create route to delete an employee from the roster
 @gym_owner.route('/employees/<employee_id>', methods = ['DELETE'])
@@ -272,7 +268,7 @@ def delete_employee(employee_id):
 @gym_owner.route('/clients/<client_id>', methods = ['DELETE'])
 def delete_client(client_id):
     current_app.logger.info(f'DELETE /gym-owner/clients/{client_id} route')
-    query = 'DELETE FROM Client WHERE id = %s'
+    query = 'DELETE FROM Client WHERE Client_ID = %s'
     data = (client_id)
     cursor = db.get_db().cursor()
     cursor.execute(query, data)
