@@ -92,6 +92,11 @@ try:
 
         if meals_data:
             meals_df = pd.DataFrame(meals_data)
+            if 'Meal_ID' in meals_df.columns:
+                meals_df = meals_df.sort_values(by='Meal_ID', ascending=False).head(10).sort_values(by='Meal_ID')
+            else:
+                meals_df = meals_df.head(10)
+
             st.subheader("Your Meals")
             st.dataframe(meals_df[['Name', 'Recipe', 'Ingredients', 'Calories', 'Protein_Intake', 'Carb_Intake', 'Fat_Intake', 'Fiber_Intake']],
                          use_container_width=True)
