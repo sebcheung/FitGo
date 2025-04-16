@@ -85,7 +85,7 @@ with tab2:
         if submitted:
             # Prepare data for API
             workout_data = {
-                "client_id": CLIENT_ID,
+                "client_id": 33,
                 "date": formatted_date,
                 "workout_type": workout_type,
                 "duration": int(duration),
