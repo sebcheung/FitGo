@@ -142,34 +142,6 @@ def add_health_metrics(clientID):
     response.status_code = 201
     return response
 
-# #------------------------------------------------------------
-# # Update health metrics for a particular record
-# @trainers.route('/health_metrics/<recordID>', methods=['PUT'])
-# def update_health_metrics(recordID):
-#     current_app.logger.info('PUT /health_metrics/<recordID>')
-#     health_info = request.json
-#     heart_rate = health_info.get('heart_rate')
-#     calories_burned = health_info.get('calories_burned')
-#     sleep_duration = health_info.get('sleep_duration')
-#     blood_pressure = health_info.get('blood_pressure_level')
-#     water_intake = health_info.get('water_intake')
-#     caloric_intake = health_info.get('caloric_intake')
-#     body_fat = health_info.get('body_fat_percentage')
-
-#     query = '''
-#             UPDATE Health_Metrics
-#             SET Heart_Rate = %s, Calories_Burned = %s, Sleep_Duration = %s,
-#                 Blood_Pressure_Level = %s, Water_Intake = %s,
-#                 Caloric_Intake = %s, Body_Fat_Percentage = %s
-#             WHERE Record_ID = %s
-#             '''
-#     data = (heart_rate, calories_burned, sleep_duration,
-#               blood_pressure, water_intake, caloric_intake, body_fat, recordID)
-#     cursor = db.get_db().cursor()
-#     cursor.execute(query, data)
-#     db.get_db().commit()
-#     return 'health metric updated successfully!'
-
 # Updating with client and record ID
 @trainers.route('/health_metrics/<clientID>/<recordID>', methods=['PUT'])
 def update_health_metrics(clientID, recordID):
