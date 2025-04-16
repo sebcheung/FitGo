@@ -13,7 +13,7 @@ def HomeNav():
 def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
 
-#### ------------------------ For Role of Clients -------------------------------------------
+#### ------------------------ For Role of Client -------------------------------------------
 def ClientsHomeNav():
     st.sidebar.page_link(
         "pages/00_Client_Home.py", label="Client Home", icon="🏋️"
@@ -37,6 +37,43 @@ def Leaderboard():
 def Stats():
     st.sidebar.page_link(
         "pages/04_Stats.py", label="Statistics and Health Metrics", icon="📊"
+    )
+
+#### ------------------------ For Role of Trainer -------------------------------------------
+def TrainerHomeNav():
+    st.sidebar.page_link(
+        "pages/31_trainer_home.py", label="Trainer Home", icon="👟"
+    )
+
+def TrainerWorkoutPlans():
+    st.sidebar.page_link(
+        "pages/32_trainer_workout_plans.py", label="Workout Plans", icon="🔋"
+    )
+
+def TrainerCalendar():
+    st.sidebar.page_link(
+        "pages/33_trainer_calendar.py", label="Calendar", icon="📅"
+    )
+
+def Messages():
+    st.sidebar.page_link(
+        "pages/34_trainer_messages.py", label="Messages", icon="💬"
+    )
+
+def Resources():
+    st.sidebar.page_link(
+        "pages/34_trainer_resources.py", label="Resources", icon="🗃️"
+    )
+
+#### ------------------------ For Role of Nutritionist --------------------------------------
+def NutritionistHomeNav():
+    st.sidebar.page_link(
+        "pages/40_nutritionist_home.py", label="Nutritionist Home", icon="🍃"
+    )
+
+def Restrictions():
+    st.sidebar.page_link(
+        "pages/41_nutritionist_restrictions.py", label="Restrictions", icon="❌"
     )
 
 #### ------------------------ Examples for Role of pol_strat_advisor ------------------------
