@@ -106,7 +106,7 @@ with tab2:
 with tab3:
     st.subheader("Manage Your Profile")
 
-    # Create a radio button to choose between updating and creating a profile
+    # Create a radio button to update profile
     action = st.radio("Select Action", ["Update My Profile", "Create New Profile"])
 
     if action == "Update My Profile":
@@ -157,44 +157,7 @@ with tab3:
             
             except Exception as e:
                 st.error(f"Error updating profile: {str(e)}")
-
-    else:  # Create New Profile
-        st.write("Create a new leaderboard profile")
-        
-        username = st.text_input("Username", "")
-        rank = st.number_input("Rank", min_value=1, value=1)
-        points = st.number_input("Points", min_value=0, value=0)
-        region = st.text_input("Region", "")
-        profile_pic = st.selectbox("Profile Picture", 
-                               options=["profile1.jpeg", "profile2.jpeg", "profile3.jpeg", 
-                                       "profile4.jpeg", "profile5.jpeg"])
-        
-        if st.button("Create Profile"):
-            # Prepare data for API
-            new_profile_data = {
-                "Username": username,
-                "Ranks": int(rank),
-                "Total_Points": int(points),
-                "Region": region,
-                "Profile_Pic": profile_pic
-            }
-            
-            try:
-                # Send POST request to create new profile
-                response = requests.post(API_URL, json=new_profile_data, timeout=5)
-                
-                if response.status_code == 201:
-                    st.success("New profile created successfully!")
-                    # Refresh the page
-                    st.rerun()
-                else:
-                    st.error(f"Failed to create profile. Status code: {response.status_code}")
-                    if hasattr(response, 'text') and response.text:
-                        st.error(f"Error details: {response.text}")
-            
-            except Exception as e:
-                st.error(f"Error creating profile: {str(e)}")
-
+    
     # Add a section for tips
     with st.expander("Leaderboard Tips"):
         st.markdown("""
