@@ -90,30 +90,57 @@ def get_health_metrics(clientID):
 
 #------------------------------------------------------------
 # Add health metrics for a particular client
-@trainers.route('/health_metrics', methods=['POST'])
-def add_health_metrics():
-    current_app.logger.info('POST /health_metrics route')
-    health_info = request.json
-    user_id = health_info['user_id']
-    heart_rate = health_info.get('heart_rate')
-    calories_burned = health_info.get('calories_burned')
-    sleep_duration = health_info.get('sleep_duration')
-    blood_pressure = health_info.get('blood_pressure_level')
-    water_intake = health_info.get('water_intake')
-    caloric_intake = health_info.get('caloric_intake')
-    body_fat = health_info.get('body_fat_percentage')
-
-    query = '''
-            INSERT INTO Health_Metrics (User_ID, Heart_Rate, Calories_Burned, Sleep_Duration,
-                Blood_Pressure_Level, Water_Intake, Caloric_Intake, Body_Fat_Percentage)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            '''
-    data = (user_id, heart_rate, calories_burned, sleep_duration,
-              blood_pressure, water_intake, caloric_intake, body_fat)
+@trainers.route('/health_metrics/<clientID>', methods=['POST'])
+def add_health_metrics(clientID):
+    current_app.logger.info('POST /health_metrics/<clientID> route')
+    
+    # collect data from the request object 
+    the_data = request.json
+    current_app.logger.info(the_data)
+    
+    # extract values from the request
+    user_id = clientID
+    heart_rate = the_data.get('Heart_Rate')
+    calories_burned = the_data.get('Calories_Burned')
+    sleep_duration = the_data.get('Sleep_Duration')
+    blood_pressure_level = the_data.get('Blood_Pressure_Level')
+    water_intake = the_data.get('Water_Intake')
+    caloric_intake = the_data.get('Caloric_Intake')
+    body_fat_percentage = the_data.get('Body_Fat_Percentage')
+    
+    # Build and execute INSERT query
+    query = f'''
+        INSERT INTO Health_Metrics (
+            User_ID, 
+            Heart_Rate, 
+            Calories_Burned, 
+            Sleep_Duration, 
+            Blood_Pressure_Level, 
+            Water_Intake, 
+            Caloric_Intake, 
+            Body_Fat_Percentage
+        )
+        VALUES (
+            {user_id}, 
+            {heart_rate}, 
+            {calories_burned}, 
+            {sleep_duration}, 
+            '{blood_pressure_level}', 
+            {water_intake}, 
+            {caloric_intake}, 
+            {body_fat_percentage}
+        )
+    '''
+    
+    current_app.logger.info(f'Query: {query}')
+    
     cursor = db.get_db().cursor()
-    cursor.execute(query, data)
+    cursor.execute(query)
     db.get_db().commit()
-    return 'health metric added!'
+    
+    response = make_response("Successfully added health metrics")
+    response.status_code = 201
+    return response
 
 #------------------------------------------------------------
 # Update health metrics for a particular record
@@ -142,6 +169,44 @@ def update_health_metrics(recordID):
     cursor.execute(query, data)
     db.get_db().commit()
     return 'health metric updated successfully!'
+
+# Updating with client and record ID
+@trainers.route('/health_metrics/<clientID>/<recordID>', methods=['PUT'])
+def update_health_metrics(clientID, recordID):
+    current_app.logger.info('PUT /health_metrics/<clientID>/<recordID> route')
+    
+    the_data = request.json
+    current_app.logger.info(the_data)
+    
+    # Build update clause based on provided fields
+    updates = []
+    if 'Heart_Rate' in the_data: updates.append(f"Heart_Rate = {the_data['Heart_Rate']}")
+    if 'Calories_Burned' in the_data: updates.append(f"Calories_Burned = {the_data['Calories_Burned']}")
+    if 'Sleep_Duration' in the_data: updates.append(f"Sleep_Duration = {the_data['Sleep_Duration']}")
+    if 'Blood_Pressure_Level' in the_data: updates.append(f"Blood_Pressure_Level = '{the_data['Blood_Pressure_Level']}'")
+    if 'Water_Intake' in the_data: updates.append(f"Water_Intake = {the_data['Water_Intake']}")
+    if 'Caloric_Intake' in the_data: updates.append(f"Caloric_Intake = {the_data['Caloric_Intake']}")
+    if 'Body_Fat_Percentage' in the_data: updates.append(f"Body_Fat_Percentage = {the_data['Body_Fat_Percentage']}")
+    
+    if not updates:
+        response = make_response("No fields to update")
+        response.status_code = 400
+        return response
+        
+    update_clause = ', '.join(updates)
+    query = f'''
+        UPDATE Health_Metrics
+        SET {update_clause}
+        WHERE Record_ID = {recordID} AND User_ID = {clientID}
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    response = make_response("Successfully updated health metrics")
+    response.status_code = 200
+    return response
 
 # ----------------------------------------------
 # Retrieve training session info for a client
