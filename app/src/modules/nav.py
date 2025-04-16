@@ -62,7 +62,7 @@ def Messages():
 
 def Resources():
     st.sidebar.page_link(
-        "pages/34_trainer_resources.py", label="Resources", icon="🗃️"
+        "pages/35_trainer_resources.py", label="Resources", icon="🗃️"
     )
 
 #### ------------------------ For Role of Nutritionist --------------------------------------
