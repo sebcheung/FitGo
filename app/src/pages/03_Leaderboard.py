@@ -107,7 +107,7 @@ with tab3:
     st.subheader("Manage Your Profile")
 
     # Create a radio button to update profile
-    action = st.radio("Select Action", ["Update My Profile", "Create New Profile"])
+    action = st.radio("Select Action", ["Update My Profile"])
 
     if action == "Update My Profile":
         st.write("Update your leaderboard information")
