@@ -87,7 +87,7 @@ def add_employee():
     hire_date = the_data['Hire_Date']
 
     query = f''' INSERT INTO Employee (Boss_ID, FirstName, LastName, Age, SSN, Address, Hire_Date)
-                 VALUES ({int(boss_id)}, '{first}', '{last}', {int(age)}, '{ssn}', '{address}', {hire_date});
+                 VALUES ({int(boss_id)}, '{first}', '{last}', {int(age)}, '{ssn}', '{address}', '{hire_date}');
             '''
   
     current_app.logger.info(query)
