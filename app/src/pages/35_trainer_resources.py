@@ -1,117 +1,193 @@
 import streamlit as st
 import pandas as pd
 import requests
+from modules.nav import SideBarLinks
 
-BASE_URL = "http://web-api:4000/t"
-
-st.set_page_config(layout="wide")
-
-# Button to navigate back to trainer dashboard
-col1, col2, col3 = st.columns([8, 1, 1])
-with col3:
-    if st.button("⬅️ Back"):
-        st.switch_page('pages/31_trainer_home.py') 
-
+# Setup page
+SideBarLinks()
 st.title("🏥 Health Metrics & 📚 Trainer Resources")
 
-trainer_id = st.session_state.get("user_id", 1)
-
-st.header("💓 Client Health Metrics")
-
-# Health metrics section
-with st.form("get_health_metrics"):
-    # Get client id
-    client_id = st.text_input("Client ID to view health data", "1")
-    if st.form_submit_button("Retrieve Health Metrics"):
-        # Retrieve health metrics through API
-        resp = requests.get(f"{BASE_URL}/health_metrics/{client_id}")
-        if resp.ok:
-            data = resp.json()
-            if data:
-                df = pd.DataFrame(data)
-                st.dataframe(df)
-            else:
-                st.info("No health metrics found.")
-        else:
-            st.error("Failed to fetch health data.")
-
-st.subheader("➕ Add New Health Metric")
-with st.form("add_health"):
-    # Info needed to add a new health metric
-    user_id = st.text_input("Client ID", "")
-    heart_rate = st.number_input("Heart Rate", value=70)
-    calories = st.number_input("Calories Burned", value=200)
-    sleep = st.number_input("Sleep Duration (hrs)", value=8.0)
-    blood = st.text_input("Blood Pressure Level", "120/80")
-    water = st.number_input("Water Intake (L)", value=2.0)
-    calories_in = st.number_input("Caloric Intake", value=2200)
-    fat = st.number_input("Body Fat (%)", value=20.0)
-    if st.form_submit_button("Add Metric"):
-        payload = {
-            "user_id": user_id,
-            "heart_rate": heart_rate,
-            "calories_burned": calories,
-            "sleep_duration": sleep,
-            "blood_pressure_level": blood,
-            "water_intake": water,
-            "caloric_intake": calories_in,
-            "body_fat_percentage": fat
-        }
-        # Use API to add the health metric
-        r = requests.post(f"{BASE_URL}/health_metrics", json=payload)
-        st.success("Metric added!" if r.ok else "Failed to add metric.")
-
-st.subheader("✏️ Update Existing Metric")
-with st.form("update_health"):
-    # Info needed to update a metric
-    record_id = st.text_input("Record ID to update")
-    new_heart_rate = st.number_input("New Heart Rate", value=75)
-    new_calories = st.number_input("New Calories Burned", value=250)
-    new_sleep = st.number_input("New Sleep Duration (hrs)", value=7.5)
-    new_bp = st.text_input("New Blood Pressure", "110/70")
-    new_water = st.number_input("New Water Intake", value=2.5)
-    new_calories_in = st.number_input("New Caloric Intake", value=2100)
-    new_fat = st.number_input("New Body Fat %", value=18.0)
-    if st.form_submit_button("Update Metric"):
-        update_data = {
-            "heart_rate": new_heart_rate,
-            "calories_burned": new_calories,
-            "sleep_duration": new_sleep,
-            "blood_pressure_level": new_bp,
-            "water_intake": new_water,
-            "caloric_intake": new_calories_in,
-            "body_fat_percentage": new_fat
-        }
-        # Update health metric through API
-        r = requests.put(f"{BASE_URL}/health_metrics/{record_id}", json=update_data)
-        st.success("Metric updated!" if r.ok else "Update failed.")
-
-st.header("📚 Trainer Resources")
-
-# View resources through API
-resp = requests.get(f"{BASE_URL}/resources")
-if resp.ok:
-    resources = pd.DataFrame(resp.json())
-    if not resources.empty:
-        st.dataframe(resources)
-    else:
-        st.info("No resources available.")
+if 'user_id' in st.session_state:
+    trainer_id = st.session_state.get("user_id", 1)
 else:
-    st.error("Failed to fetch resources.")
+    trainer_id = 1  # Default trainer ID
 
-st.subheader("➕ Add New Resource")
-with st.form("add_resource"):
-    # Info needed to add a new resource
-    res_title = st.text_input("Title")
-    res_url = st.text_input("URL")
-    res_type = st.selectbox("Type", ["Video", "PDF", "Article", "Tool"])
-    if st.form_submit_button("Add Resource"):
-        payload = {
-            "Title": res_title,
-            "URL": res_url,
-            "Type": res_type,
-            "Trainer_ID": trainer_id
-        }
-        # Use API to add a resource
-        r = requests.post(f"{BASE_URL}/resources", json=payload)
-        st.success("Resource added!" if r.ok else "Failed to add resource.")
+# Base URL for API
+BASE_URL = "http://web-api:4000/t"
+
+# Create tabs for organization
+tab1, tab2 = st.tabs(["Health Metrics", "Trainer Resources"])
+
+with tab1:
+    st.header("💓 Client Health Metrics")
+
+    # Health metrics section
+    with st.form("get_health_metrics"):
+        # Get client id
+        client_id = st.text_input("Client ID to view health data", "33")
+        submitted = st.form_submit_button("Retrieve Health Metrics")
+        
+        if submitted:
+            # Retrieve health metrics through API
+            try:
+                resp = requests.get(f"{BASE_URL}/health_metrics/{client_id}")
+                if resp.ok:
+                    data = resp.json()
+                    if data:
+                        df = pd.DataFrame(data)
+                        st.dataframe(df, use_container_width=True)
+                        
+                        # Add a simple visualization if data exists
+                        if 'Heart_Rate' in df.columns and 'Date' in df.columns:
+                            df['Date'] = pd.to_datetime(df['Date'])
+                            st.line_chart(df.set_index('Date')['Heart_Rate'])
+                    else:
+                        st.info("No health metrics found.")
+                else:
+                    st.error(f"Failed to fetch health data. Status code: {resp.status_code}")
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("➕ Add New Health Metric")
+        with st.form("add_health"):
+            # Info needed to add a new health metric
+            user_id = st.text_input("Client ID", "33")
+            heart_rate = st.number_input("Heart Rate", value=70)
+            calories = st.number_input("Calories Burned", value=200)
+            sleep = st.number_input("Sleep Duration (hrs)", value=8)
+            blood = st.selectbox("Blood Pressure Level", ["Normal", "Elevated"])
+            water = st.number_input("Water Intake (L)", value=2.0)
+            calories_in = st.number_input("Caloric Intake", value=2200)
+            fat = st.number_input("Body Fat (%)", value=20.0)
+            
+            if st.form_submit_button("Add Metric"):
+                payload = {
+                    "User_ID": int(user_id),
+                    "Heart_Rate": int(heart_rate),
+                    "Calories_Burned": int(calories),
+                    "Sleep_Duration": int(sleep),
+                    "Blood_Pressure_Level": blood,
+                    "Water_Intake": float(water),
+                    "Caloric_Intake": int(calories_in),
+                    "Body_Fat_Percentage": float(fat)
+                }
+                
+                # Use API to add the health metric
+                try:
+                    # First check if we need to include client ID in URL
+                    health_url = f"{BASE_URL}/health_metrics/{user_id}"
+                    st.info(f"Attempting to post to: {health_url}")
+                    
+                    r = requests.post(health_url, json=payload)
+                    if r.status_code == 201:
+                        st.success("Metric added successfully!")
+                    else:
+                        st.error(f"Failed to add metric. Status code: {r.status_code}")
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+
+    with col2:
+        st.subheader("✏️ Update Existing Metric")
+        
+        # First get available records
+        client_for_update = st.text_input("Client ID for update", "33")
+        
+        if st.button("Fetch Records"):
+            try:
+                resp = requests.get(f"{BASE_URL}/health_metrics/{client_for_update}")
+                if resp.ok and resp.json():
+                    records = pd.DataFrame(resp.json())
+                    record_options = [f"{r['Record_ID']}: {r.get('Date', 'No date')}" for _, r in records.iterrows()]
+                    
+                    if 'record_options' not in st.session_state:
+                        st.session_state.record_options = record_options
+                        st.session_state.records = records.to_dict('records')
+                    
+                    st.success(f"Found {len(record_options)} records")
+                else:
+                    st.warning("No records found for this client")
+            except Exception as e:
+                st.error(f"Error fetching records: {str(e)}")
+        
+        with st.form("update_health"):
+            if 'record_options' in st.session_state and st.session_state.record_options:
+                selected_record = st.selectbox("Select Record", st.session_state.record_options)
+                record_id = selected_record.split(":")[0] if selected_record else ""
+                
+                # Basic fields to update
+                new_heart_rate = st.number_input("New Heart Rate", value=75)
+                new_calories = st.number_input("New Calories Burned", value=250)
+            else:
+                record_id = st.text_input("Record ID to update")
+                new_heart_rate = st.number_input("New Heart Rate", value=75)
+                new_calories = st.number_input("New Calories Burned", value=250)
+            
+            if st.form_submit_button("Update Metric"):
+                if record_id:
+                    update_data = {
+                        "Heart_Rate": int(new_heart_rate),
+                        "Calories_Burned": int(new_calories)
+                    }
+                    
+                    # Update health metric through API
+                    try:
+                        update_url = f"{BASE_URL}/health_metrics/{client_for_update}/{record_id}"
+                        st.info(f"Attempting to update: {update_url}")
+                        
+                        r = requests.put(update_url, json=update_data)
+                        if r.status_code == 200:
+                            st.success("Metric updated successfully!")
+                        else:
+                            st.error(f"Update failed. Status code: {r.status_code}")
+                    except Exception as e:
+                        st.error(f"Error: {str(e)}")
+                else:
+                    st.error("Please select or enter a record ID")
+
+with tab2:
+    st.header("📚 Trainer Resources")
+
+    # View resources through API
+    try:
+        resp = requests.get(f"{BASE_URL}/resources")
+        if resp.ok:
+            if resp.json():
+                resources = pd.DataFrame(resp.json())
+                st.dataframe(resources, use_container_width=True)
+            else:
+                st.info("No resources available.")
+        else:
+            st.warning(f"Failed to fetch resources. Status: {resp.status_code}")
+    except Exception as e:
+        st.error(f"Error fetching resources: {str(e)}")
+
+    st.subheader("➕ Add New Resource")
+    with st.form("add_resource"):
+        # Info needed to add a new resource
+        res_title = st.text_input("Title")
+        res_url = st.text_input("URL")
+        res_type = st.selectbox("Type", ["Video", "PDF", "Article", "Tool"])
+        
+        if st.form_submit_button("Add Resource"):
+            if res_title and res_url:
+                payload = {
+                    "Title": res_title,
+                    "URL": res_url,
+                    "Type": res_type,
+                    "Trainer_ID": trainer_id
+                }
+                
+                # Use API to add a resource
+                try:
+                    r = requests.post(f"{BASE_URL}/resources", json=payload)
+                    if r.status_code in [200, 201]:
+                        st.success("Resource added successfully!")
+                    else:
+                        st.error(f"Failed to add resource. Status code: {r.status_code}")
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+            else:
+                st.error("Title and URL are required")
