@@ -76,6 +76,16 @@ def Restrictions():
         "pages/41_nutritionist_restrictions.py", label="Restrictions", icon="❌"
     )
 
+def Meal_Manager():
+    st.sidebar.page_link(
+        "pages/42_nutritionist_meal_manager.py", label="Meal Manager", icon="🍽️"
+    )
+
+def Meal_Plan_Manager():
+    st.sidebar.page_link(
+        "pages/43_nutritionist_mealPlan_manager.py", label="Meal Plan Manager", icon="📋"
+    )
+
 # --------------------------------Links Function -----------------------------------------------
 def SideBarLinks(show_home=False):
     """
