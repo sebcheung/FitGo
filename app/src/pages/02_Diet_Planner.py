@@ -1,104 +1,109 @@
 import logging
-logger = logging.getLogger(__name__)
-import streamlit as st
-from streamlit_extras.app_logo import add_logo
 import pandas as pd
-import pydeck as pdk
-from urllib.error import URLError
+import streamlit as st
+import requests
+import plotly.express as px
 from modules.nav import SideBarLinks
 
 SideBarLinks()
+st.header('Arnold\'s Diet Planner')
+if 'first_name' in st.session_state:
+    st.write(f"### Hi, {st.session_state['first_name']}.")
+else:
+    st.write("### Welcome to your Diet Planner.")
 
-# add the logo
-add_logo("assets/logo.png", height=400)
+MEAL_PLANS_URL = f"http://web-api:4000/n/meal-plans/31"
 
-# set up the page
-st.markdown("# Mapping Demo")
-st.sidebar.header("Mapping Demo")
-st.write(
-    """This Mapping Demo is from the Streamlit Documentation. It shows how to use
-[`st.pydeck_chart`](https://docs.streamlit.io/library/api-reference/charts/st.pydeck_chart)
-to display geospatial data."""
-)
+# Fetch meal plan data
+def fetch_meal_plan():
+    try:
+        response = requests.get(MEAL_PLANS_URL, timeout=5)
+        return response.json()[0] if response.status_code == 200 and response.json() else None
+    except Exception as e:
+        st.error(f"Error fetching meal plan: {str(e)}")
+        return None
 
-
-@st.cache_data
-def from_data_file(filename):
-    url = (
-        "http://raw.githubusercontent.com/streamlit/"
-        "example-data/master/hello/v1/%s" % filename
-    )
-    return pd.read_json(url)
-
+def get_sample_meals():
+    return [
+        {"Meal_ID": 373, "Plan_ID": 5, "Name": "Breakfast", "Type": "Normal", "Recipe": "Vegetable Stir Fry", 
+         "Ingredients": "eggs", "Fiber_Intake": 14, "Carb_Intake": 91, "Calories": 1999, "Fat_Intake": 37, "Protein_Intake": 41},
+        {"Meal_ID": 374, "Plan_ID": 5, "Name": "Lunch", "Type": "Normal", "Recipe": "Chicken Alfredo", 
+         "Ingredients": "chicken, pasta", "Fiber_Intake": 22, "Carb_Intake": 65, "Calories": 750, "Fat_Intake": 25, "Protein_Intake": 45},
+        {"Meal_ID": 375, "Plan_ID": 5, "Name": "Dinner", "Type": "Normal", "Recipe": "Salmon with Vegetables", 
+         "Ingredients": "salmon, broccoli", "Fiber_Intake": 8, "Carb_Intake": 30, "Calories": 650, "Fat_Intake": 22, "Protein_Intake": 40},
+        {"Meal_ID": 376, "Plan_ID": 5, "Name": "Snack", "Type": "Normal", "Recipe": "Greek Yogurt with Berries", 
+         "Ingredients": "yogurt, berries", "Fiber_Intake": 3, "Carb_Intake": 20, "Calories": 180, "Fat_Intake": 3, "Protein_Intake": 15}
+    ]
 
 try:
-    ALL_LAYERS = {
-        "Bike Rentals": pdk.Layer(
-            "HexagonLayer",
-            data=from_data_file("bike_rental_stats.json"),
-            get_position=["lon", "lat"],
-            radius=200,
-            elevation_scale=4,
-            elevation_range=[0, 1000],
-            extruded=True,
-        ),
-        "Bart Stop Exits": pdk.Layer(
-            "ScatterplotLayer",
-            data=from_data_file("bart_stop_stats.json"),
-            get_position=["lon", "lat"],
-            get_color=[200, 30, 0, 160],
-            get_radius="[exits]",
-            radius_scale=0.05,
-        ),
-        "Bart Stop Names": pdk.Layer(
-            "TextLayer",
-            data=from_data_file("bart_stop_stats.json"),
-            get_position=["lon", "lat"],
-            get_text="name",
-            get_color=[0, 0, 0, 200],
-            get_size=15,
-            get_alignment_baseline="'bottom'",
-        ),
-        "Outbound Flow": pdk.Layer(
-            "ArcLayer",
-            data=from_data_file("bart_path_stats.json"),
-            get_source_position=["lon", "lat"],
-            get_target_position=["lon2", "lat2"],
-            get_source_color=[200, 30, 0, 160],
-            get_target_color=[200, 30, 0, 160],
-            auto_highlight=True,
-            width_scale=0.0001,
-            get_width="outbound",
-            width_min_pixels=3,
-            width_max_pixels=30,
-        ),
-    }
-    st.sidebar.markdown("### Map Layers")
-    selected_layers = [
-        layer
-        for layer_name, layer in ALL_LAYERS.items()
-        if st.sidebar.checkbox(layer_name, True)
-    ]
-    if selected_layers:
-        st.pydeck_chart(
-            pdk.Deck(
-                map_style="mapbox://styles/mapbox/light-v9",
-                initial_view_state={
-                    "latitude": 37.76,
-                    "longitude": -122.4,
-                    "zoom": 11,
-                    "pitch": 50,
-                },
-                layers=selected_layers,
-            )
+    # Get meal plan data from API
+    meal_plan = fetch_meal_plan()
+    
+    if meal_plan:
+        # Display plan metrics
+        st.subheader("Your Active Meal Plan")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Daily Calories", f"{meal_plan.get('Calories', 'N/A')} kcal")
+            st.metric("Protein Goal", f"{meal_plan.get('Protein_Goal', 'N/A')}g")
+        with col2:
+            st.metric("Carbs Goal", f"{meal_plan.get('Carb_Goal', 'N/A')}g")
+            st.metric("Fat Goal", f"{meal_plan.get('Fat_Goal', 'N/A')}g")
+        
+        st.metric("Fiber Goal", f"{meal_plan.get('Fiber_Goal', 'N/A')}g")
+        
+        # Format and display dates
+        start_date = pd.to_datetime(meal_plan.get('Start_Date', 'N/A')).strftime('%Y-%m-%d') if meal_plan.get('Start_Date') else 'N/A'
+        end_date = pd.to_datetime(meal_plan.get('End_Date', 'N/A')).strftime('%Y-%m-%d') if meal_plan.get('End_Date') else 'N/A'
+        st.write(f"**Plan Period:** {start_date} to {end_date}")
+        
+        # Get sample meals
+        meals_data = get_sample_meals()
+        
+        # Display meals table
+        st.subheader("Your Meals")
+        meals_df = pd.DataFrame(meals_data)
+        st.dataframe(meals_df[['Name', 'Recipe', 'Ingredients', 'Calories', 'Protein_Intake', 'Carb_Intake', 'Fat_Intake', 'Fiber_Intake']], 
+                    use_container_width=True)
+        
+        # Create nutritional breakdown chart
+        st.subheader("Nutritional Breakdown by Meal")
+        
+        # Prepare data for chart
+        chart_data = meals_df[['Name', 'Protein_Intake', 'Carb_Intake', 'Fat_Intake', 'Fiber_Intake']]
+        melted_data = pd.melt(
+            chart_data, 
+            id_vars=['Name'], 
+            value_vars=['Protein_Intake', 'Carb_Intake', 'Fat_Intake', 'Fiber_Intake'],
+            var_name='Nutrient', 
+            value_name='Grams'
         )
+        melted_data['Nutrient'] = melted_data['Nutrient'].str.replace('_Intake', '')
+        
+        # Create chart
+        fig = px.bar(
+            melted_data, 
+            x='Name', 
+            y='Grams', 
+            color='Nutrient',
+            barmode='group'
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Add calorie distribution pie chart
+        st.subheader("Calorie Distribution")
+        pie_fig = px.pie(meals_df, values='Calories', names='Name')
+        st.plotly_chart(pie_fig, use_container_width=True)
+        
+        # Display ingredients list
+        st.subheader("Ingredients List")
+        ingredients = meals_df['Ingredients'].tolist()
+        cols = st.columns(3)
+        for i, ingredient in enumerate(ingredients):
+            cols[i % 3].write(f"- {ingredient}")
+    
     else:
-        st.error("Please choose at least one layer above.")
-except URLError as e:
-    st.error(
-        """
-        **This demo requires internet access.**
-        Connection error: %s
-    """
-        % e.reason
-    )
+        st.info("No meal plan found for this client.")
+
+except Exception as e:
+    st.error(f"An unexpected error occurred: {str(e)}")

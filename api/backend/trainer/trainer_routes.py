@@ -12,10 +12,10 @@ trainers = Blueprint('trainers', __name__)
 # Retrieve workout plan for client
 @trainers.route('/workout_plans/<clientID>', methods=['GET'])
 def get_workout_plans(clientID):
-    current_app.logger.info('GET /workout_plans/<clientID> route')
+    current_app.logger.info(f'GET /workout_plans/{clientID} route')
     cursor = db.get_db().cursor()
-    query = 'SELECT * FROM Workout_Plans WHERE Client_ID = {0}'.format(clientID)
-    cursor.execute(query, (clientID))
+    query = 'SELECT * FROM Workout_Plans WHERE Client_ID = %s'
+    cursor.execute(query, (clientID,))
     data = cursor.fetchall()
     response = make_response(jsonify(data))
     response.status_code = 200
@@ -82,7 +82,7 @@ def delete_workout_plan(clientID):
 def get_health_metrics(clientID):
     current_app.logger.info('GET /health_metrics/<clientID> route')
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT * FROM health_metrics WHERE client_id = %s', (clientID,))
+    cursor.execute('SELECT * FROM Health_Metrics WHERE User_ID = %s', (clientID,))
     data = cursor.fetchall()
     response = make_response(jsonify(data))
     response.status_code = 200
@@ -144,6 +144,36 @@ def update_health_metrics(recordID):
     return 'health metric updated successfully!'
 
 # ----------------------------------------------
+# Retrieve training session info for a client
+@trainers.route('/training_session/<trainer_id>', methods=['GET'])
+def get_training_session(trainer_id):
+
+    query = f'''SELECT Session_ID, 
+                       Client_ID, 
+                       Status, 
+                       Date_time,
+                       Class_description,
+                       Max_participants 
+                FROM Training_Session 
+                WHERE Trainer_ID = {str(trainer_id)}
+    '''
+    
+    current_app.logger.info(f'GET /workout_log/<trainer_id> query={query}')
+
+    # get the database connection, execute the query, and 
+    # fetch the results as a Python Dictionary
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    
+    # Check if data received is what is expected.
+    current_app.logger.info(f'GET /workout_log/<trainer_id> Result of query = {theData}')
+    
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+# ----------------------------------------------
 # Add a new training session for a client
 @trainers.route('/training_session/<clientID>', methods=['POST'])
 def add_training_session(clientID):
@@ -193,27 +223,11 @@ def send_message_to_client(clientID):
     cursor = db.get_db().cursor()
     cursor.execute(query, data)
     db.get_db().commit()
-    return 'message sent to client.'########################################################
-# Sample customers blueprint of endpoints
-# Remove this file if you are not using it in your project
-########################################################
-from flask import Blueprint
-from flask import request
-from flask import jsonify
-from flask import make_response
-from flask import current_app
-from backend.db_connection import db
-from backend.ml_models.model01 import predict
-
-#------------------------------------------------------------
-# Create a new Blueprint object, which is a collection of 
-# routes.
-trainer = Blueprint('trainer', __name__)
-
+    return 'message sent to client.'
 
 #------------------------------------------------------------
 # Get all resources the trainer has access to.
-@trainer.route('/resources', methods=['GET'])
+@trainers.route('/resources', methods=['GET'])
 def get_resources():
 
     cursor = db.get_db().cursor()
@@ -229,7 +243,7 @@ def get_resources():
 
 # ------------------------------------------------------------
 # This is a POST route for a trainer to add a new resource entry.
-@trainer.route('/resources', methods=['POST'])
+@trainers.route('/resources', methods=['POST'])
 def add_new_resource():
     
     # In a POST request, there is a 
@@ -250,52 +264,7 @@ def add_new_resource():
                               Trainer_ID)
         VALUES ('{title}', '{url}', '{type}', {trainer_id})
     '''
-#------------------------------------------------------------
-
-#------------------------------------------------------------
-# Create a new Blueprint object, which is a collection of 
-# routes.
-trainer = Blueprint('trainer', __name__)
-
-
-
-#------------------------------------------------------------
-# Get all resources the trainer has access to.
-@trainer.route('/resources', methods=['GET'])
-def get_resources():
-
     cursor = db.get_db().cursor()
-    cursor.execute('''SELECT Resources_ID, Title, URL,
-                    Type, Trainer_ID FROM Resources
-    ''')
-    
-    theData = cursor.fetchall()
-    
-    the_response = make_response(jsonify(theData))
-    the_response.status_code = 200
-    return the_response
-
-# ------------------------------------------------------------
-# This is a POST route for a trainer to add a new resource entry.
-@trainer.route('/resources', methods=['POST'])
-def add_new_resource():
-    
-    # In a POST request, there is a 
-    # collecting data from the request object 
-    the_data = request.json
-    current_app.logger.info(the_data)
-
-    #extracting the variable
-    title = the_data['Title']
-    url = the_data['URL']
-    type = the_data['Type']
-    trainer_id = the_data['Trainer_ID']
-    
-    query = f'''
-        INSERT INTO Resources (Title,
-                              URL,
-                              Type, 
-                              Trainer_ID)
-        VALUES ('{title}', '{url}', '{type}', {trainer_id})
-    '''
-#------------------------------------------------------------
+    cursor.execute(query)
+    db.get_db().commit()
+    return 'Resource added!'

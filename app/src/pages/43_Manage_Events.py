@@ -29,7 +29,7 @@ st.write('## Create Event')
 
 with st.form('Create a New Event'):
     event_name = st.text_input('Event Name:')
-    host_name = st.text_input('Host_Name:')
+    host_name = st.text_input('Host Name:')
     sponsor = st.text_input('Sponsor:')
     location = st.text_input('Location:')
     event_date = st.date_input('Event Date:')

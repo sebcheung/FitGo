@@ -13,7 +13,7 @@ def HomeNav():
 def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
 
-#### ------------------------ For Role of Clients -------------------------------------------
+#### ------------------------ For Role of Client -------------------------------------------
 def ClientsHomeNav():
     st.sidebar.page_link(
         "pages/00_Client_Home.py", label="Client Home", icon="🏋️"
@@ -39,47 +39,52 @@ def Stats():
         "pages/04_Stats.py", label="Statistics and Health Metrics", icon="📊"
     )
 
-#### ------------------------ Examples for Role of pol_strat_advisor ------------------------
-def PolStratAdvHomeNav():
+#### ------------------------ For Role of Trainer -------------------------------------------
+def TrainerHomeNav():
     st.sidebar.page_link(
-        "pages/00_Pol_Strat_Home.py", label="Political Strategist Home", icon="👤"
+        "pages/31_trainer_home.py", label="Trainer Home", icon="👟"
     )
 
-
-def WorldBankVizNav():
+def TrainerWorkoutPlans():
     st.sidebar.page_link(
-        "pages/01_World_Bank_Viz.py", label="World Bank Visualization", icon="🏦"
+        "pages/32_trainer_workout_plans.py", label="Workout Plans", icon="🔋"
     )
 
-
-def MapDemoNav():
-    st.sidebar.page_link("pages/02_Map_Demo.py", label="Map Demonstration", icon="🗺️")
-
-
-## ------------------------ Examples for Role of usaid_worker ------------------------
-def ApiTestNav():
-    st.sidebar.page_link("pages/12_API_Test.py", label="Test the API", icon="🛜")
-
-
-def PredictionNav():
+def TrainerCalendar():
     st.sidebar.page_link(
-        "pages/11_Prediction_Page.py", label="Regression Prediction", icon="📈"
+        "pages/33_trainer_calendar.py", label="Calendar", icon="📅"
     )
 
-
-def ClassificationNav():
+def Messages():
     st.sidebar.page_link(
-        "pages/13_Classification.py", label="Classification Demo", icon="🌺"
+        "pages/34_trainer_messages.py", label="Messages", icon="💬"
     )
 
-
-#### ------------------------ System Admin Role ------------------------
-def AdminPageNav():
-    st.sidebar.page_link("pages/20_Admin_Home.py", label="System Admin", icon="🖥️")
+def Resources():
     st.sidebar.page_link(
-        "pages/21_ML_Model_Mgmt.py", label="ML Model Management", icon="🏢"
+        "pages/35_trainer_resources.py", label="Resources", icon="🗃️"
     )
 
+#### ------------------------ For Role of Nutritionist --------------------------------------
+def NutritionistHomeNav():
+    st.sidebar.page_link(
+        "pages/40_nutritionist_home.py", label="Nutritionist Home", icon="🍃"
+    )
+
+def Restrictions():
+    st.sidebar.page_link(
+        "pages/41_nutritionist_restrictions.py", label="Restrictions", icon="❌"
+    )
+
+def Meal_Manager():
+    st.sidebar.page_link(
+        "pages/42_nutritionist_meal_manager.py", label="Meal Manager", icon="🍽️"
+    )
+
+def Meal_Plan_Manager():
+    st.sidebar.page_link(
+        "pages/43_nutritionist_mealPlan_manager.py", label="Meal Plan Manager", icon="📋"
+    )
 
 # --------------------------------Links Function -----------------------------------------------
 def SideBarLinks(show_home=False):
@@ -101,29 +106,28 @@ def SideBarLinks(show_home=False):
 
     # Show the other page navigators depending on the users' role.
     if st.session_state["authenticated"]:
-        # If the user is Clients, show Workout Log, Leaderboard, Diet Planner, and Health Metrics
+        # If the user is Client, show Workout Log, Leaderboard, Diet Planner, and Health Metrics
         if st.session_state["role"] == "client":
             ClientsHomeNav()
             WorkoutLog()
             DietPlanner()
             Leaderboard()
             Stats()
+        
+        # If the user is Trainer, show Workout Plans, Calendar, Messages, and Resources
+        if st.session_state["role"] == "trainer":
+            TrainerHomeNav()
+            TrainerCalendar()
+            Messages()
+            TrainerWorkoutPlans()
+            Resources()
 
-        # Show World Bank Link and Map Demo Link if the user is a political strategy advisor role.
-        if st.session_state["role"] == "pol_strat_advisor":
-            PolStratAdvHomeNav()
-            WorldBankVizNav()
-            MapDemoNav()
-
-        # If the user role is usaid worker, show the Api Testing page
-        if st.session_state["role"] == "usaid_worker":
-            PredictionNav()
-            ApiTestNav()
-            ClassificationNav()
-
-        # If the user is an administrator, give them access to the administrator pages
-        if st.session_state["role"] == "administrator":
-            AdminPageNav()
+        # If the user is Nutritionist, show Restrictions, Meal Manager, and Meal Plan Manager
+        if st.session_state["role"] == "nutritionist":
+            NutritionistHomeNav()
+            Restrictions()
+            Meal_Manager()
+            Meal_Plan_Manager()
 
     # Always show the About page at the bottom of the list of links
     AboutPageNav()

@@ -9,10 +9,7 @@ from modules.nav import SideBarLinks
 SideBarLinks()
 
 # set the header of the page
-st.header('Workout Logger')
-
-# You can access the session state to make a more customized/personalized app experience
-st.write(f"### Hi, {st.session_state['first_name']}.")
+st.header('Arnold\'s Workout Logger')
 
 api_url = "http://web-api:4000/c/workout_log/33"
 
@@ -28,7 +25,7 @@ try:
             data = response.json()
             if len(data) > 0:
                 df = pd.DataFrame(data)
-                st.subheader("Workout Logs for Client ID 33")
+                st.subheader(f"Workout Logs {st.session_state['first_name']}")
                 st.dataframe(df)
             else:
                 st.warning("No workout logs found for this client.")

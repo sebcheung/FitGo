@@ -17,7 +17,8 @@ st.write(f"### Welcome, {st.session_state['first_name']}!")
 # Input for selecting client
 client_id = st.text_input("Enter Client ID to view health & nutrition data:", "1")
 
-BASE_URL = "http://localhost:4000"
+BASE_URL = "http://web-api:4000/n"
+RESOURCES_URL = "http://web-api:4000/t"
 
 if st.button("Load Client Data"):
     # ----------------- Meal Plans -----------------
@@ -53,10 +54,14 @@ if st.button("Load Client Data"):
         st.error("Could not fetch restrictions.")
 
     # ----------------- Educational Content ------------------
-    edu_res = requests.get(f"{BASE_URL}/educational-content/{client_id}")
-    if edu_res.ok:
+    # View resources through API
+    resp = requests.get(f"{RESOURCES_URL}/resources")
+    if resp.ok:
         st.subheader("📚 Educational Resources")
-        for item in edu_res.json():
-            st.markdown(f"**{item['Title']}** ({item['Type']}): [Link]({item['URL']})")
+        resources = pd.DataFrame(resp.json())
+        if not resources.empty:
+            st.dataframe(resources)
+        else:
+            st.info("No resources available.")
     else:
-        st.error("Could not fetch educational content.")
+        st.error("Failed to fetch resources.")
