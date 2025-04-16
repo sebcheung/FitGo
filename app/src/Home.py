@@ -70,7 +70,7 @@ if st.button("Act as Jordan Reynolds, a certified Personal Trainer",
     # finally, we ask streamlit to switch to another page, in this case, the 
     # landing page for this particular user type
     logger.info("Logging in as certified Personal Trainer Persona")
-    st.switch_page('pages/trainer_home.py')
+    st.switch_page('pages/31_trainer_home.py')
 
 # Nutritionist persona authentication
 if st.button('Act as Apple Smith, a certified Nutritionist', 
