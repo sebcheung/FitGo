@@ -126,7 +126,7 @@ try:
                     submit = st.form_submit_button("Update")
                     if submit:
                         put_meal({
-                            "Meal_ID": meal_row['Meal_ID'],
+                            "Meal_ID": int(meal_row['Meal_ID']),
                             "Name": new_name,
                             "Type": new_type,
                             "Recipe": new_recipe,
