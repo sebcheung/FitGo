@@ -101,3 +101,12 @@ PUT to update data
 ## 📄 License
 This project is licensed under the MIT License.
 See the LICENSE file for more information.
+
+---
+
+## 🙌 Acknowledgments
+💻 CS 3200 Course Project team members: Sebastian Cheung, Saachi Bhatia, Tarun Anbarasu, Naisha Mistry, and Andrei Zubek
+
+📚 Course instructors and teaching assistants
+
+🧩 Open source libraries and tools that made this project possible
