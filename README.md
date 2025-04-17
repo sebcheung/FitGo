@@ -1,7 +1,7 @@
-FitGo: Integrated Fitness and Wellness Platform
+# FitGo: Integrated Fitness and Wellness Platform
 
 ## Overview
-FitGo is a comprehensive fitness and wellness tracking platform that combines workout planning, nutrition tracking, health monitoring, and professional guidance into one streamlined app. Our goal is to resolve the issue of utilizing different apps for workout logging, diet planning, and connecting with trainers by bringing it all together in a cohesive dashboard for a more data-driven health journey.
+FitGo is a comprehensive fitness and wellness tracking platform that combines workout planning, nutrition tracking, health monitoring, and professional guidance into one streamlined app. Our goal is to resolve the issue of utilizing different apps for these tasks by bringing it all together in a cohesive dashboard that enables users to identify key trends/patterns and make informed lifestyle choices based on reliable data. 
 
 ### Who It's For
 - **Fitness Enthusiasts** – Track performance metrics, log workouts, participate in competitions
@@ -15,6 +15,10 @@ FitGo is a comprehensive fitness and wellness tracking platform that combines wo
 - **Health Metrics Dashboard**: Monitor vitals like heart rate and sleep
 - **Leaderboards**: Join challenges and stay motivated with community rankings
 
+## Demo Links
+- Google Drive: https://drive.google.com/file/d/1Q7rfANnfl-85hw9fbAiiyqqyN6OVF93U/view?usp=sharing
+- YouTube: https://www.youtube.com/watch?v=g4hzAG4t0kw
+
 ## Tech Stack
 
 - **Frontend**: Streamlit 
@@ -22,14 +26,10 @@ FitGo is a comprehensive fitness and wellness tracking platform that combines wo
 - **Database**: MySQL
 - **Containerization**: Docker
 
-## Demo Links
-- Google Drive:https://drive.google.com/file/d/1Q7rfANnfl-85hw9fbAiiyqqyN6OVF93U/view?usp=sharing
-- YouTube: https://www.youtube.com/watch?v=g4hzAG4t0kw 
-
 
 ## Getting Started
 
-### 🔧 Installation & Setup
+### Installation & Setup
 
 1. Clone the repository
    ```bash
@@ -57,16 +57,18 @@ docker compose down db
 ```
 
 ## Docker Container Overview
-app -> Streamlit frontend -> port: 8501  
-api -> Flask backend API ->  port: 4000  
-db -> MySQL Database -> port: 3200
+- app -> Streamlit (Frontend) -> port: 8501  
+- api -> Flask API (Backend) ->  port: 4000  
+- db -> MySQL Database -> port: 3200
 
 
 ## API Structure
-The REST API is organized by our four user personas with the following prefixes:
-Client: /c/...
-Trainer operations: /t/...
-Nutritionist operations: /n/...
-Gym owner operations: /go/...
+The REST API is organized by creating blueprints for each of our four user personas with the following prefixes:
+- Client: /c/...
+- Trainer operations: /t/...
+- Nutritionist operations: /n/...
+- Gym owner operations: /go/...
+
+All blueprints contain GET, POST, PUT, and DELETE routes to retrieve, add, update, and delete data based on the given persona's needs. 
 
 ### By CS 3200 Course Project team members: Sebastian Cheung, Saachi Bhatia, Tarun Anbarasu, Naisha Mistry, and Andrei Zubek
