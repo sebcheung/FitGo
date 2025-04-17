@@ -42,17 +42,10 @@ with tab1:
                     
                     for ex in exercises:
                         st.write(f"• {ex.strip()}")
-                    
-                    # Delete plan through API
-                    if st.button("Delete This Plan"):
-                        delete_resp = requests.delete(f"{BASE_URL}/workout_plans/{client_id}")
-                        if delete_resp.ok:
-                            st.success("Plan deleted successfully!")
                 else:
                     st.info("No workout plan found for this client.")
             else:
-                st.error("Failed to fetch workout plan. Status code: {response.status_code}")
-                st.error(f"Response: {response.text}")
+                st.error("Failed to fetch workout plan.")
         except Exception as e:
             st.error(f"Error: {str(e)}")
 
@@ -80,8 +73,7 @@ with tab2:
             if response.ok:
                 st.success("Workout plan created successfully!")
             else:
-                st.error("Failed to create workout plan. Status code: {response.status_code}")
-                st.error(f"Response: {response.text}")
+                st.error("Failed to create workout plan.")
         except Exception as e:
             st.error(f"Error: {str(e)}")
 
@@ -110,8 +102,7 @@ with tab3:
                 if response.ok:
                     st.success("Workout plan updated successfully!")
                 else:
-                    st.error("Failed to update workout plan. Status code: {response.status_code}")
-                    st.error(f"Response: {response.text}")
+                    st.error("Failed to update workout plan.")
             else:
                 st.warning("No changes specified to update.")
         except Exception as e:
