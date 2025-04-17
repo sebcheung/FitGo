@@ -3,7 +3,7 @@
 ## Overview
 FitGo is a comprehensive fitness and wellness tracking platform that combines workout planning, nutrition tracking, health monitoring, and professional guidance into one streamlined app. Our goal is to resolve the issue of utilizing different apps for these tasks by bringing them all together in a cohesive dashboard that enables users to identify key trends/patterns and make informed lifestyle choices based on reliable data. 
 
-### Who It's For
+## Who It's For
 - **Fitness Enthusiasts**: Track performance metrics, log workouts, participate in competitions
 - **Personal Trainers**: Manage client workout plans and monitor progress
 - **Nutritionists**: Create and update meal plans tailored to client dietary needs/restrictions
