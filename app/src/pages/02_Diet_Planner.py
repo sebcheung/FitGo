@@ -7,12 +7,12 @@ from modules.nav import SideBarLinks
 
 SideBarLinks()
 st.header('Arnold\'s Diet Planner')
-
 client_id = st.session_state.get('client_id', 31) 
 if 'first_name' in st.session_state:
     st.write(f"### Hi, {st.session_state['first_name']}.")
 else:
     st.write("### Welcome to your Diet Planner.")
+
 MEAL_PLANS_URL = f"http://web-api:4000/n/meal-plans/{client_id}"
 MEALS_URL = "http://web-api:4000/n/meals"
 
@@ -159,9 +159,7 @@ try:
                     "Recipe": recipe,
                     "Ingredients": ingredients
                 })
-
     else:
         st.info("No meal plan found for this client.")
-
 except Exception as e:
     st.error(f"An unexpected error occurred: {str(e)}")

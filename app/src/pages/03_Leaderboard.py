@@ -7,7 +7,6 @@ import plotly.express as px
 
 SideBarLinks()
 st.header('FitGo Leaderboard 🏆')
-
 if 'first_name' in st.session_state:
     st.write(f"### Hi, {st.session_state['first_name']}!")
 API_URL = f"http://web-api:4000/c/leaderboard/33"
@@ -48,12 +47,10 @@ def fetch_user_entry():
 # Build leaderboard dataframe
 leaderboard_df = pd.DataFrame(sample_data)
 leaderboard_df['IsCurrentUser'] = False
-
 user_entry = fetch_user_entry()
 if user_entry:
     if user_entry['Username'] not in leaderboard_df['Username'].values:
         leaderboard_df = pd.concat([leaderboard_df, pd.DataFrame([user_entry])], ignore_index=True)
-
 leaderboard_df = leaderboard_df.sort_values(by='Points', ascending=False)
 
 # Tabs for UI
@@ -64,7 +61,6 @@ with tab1:
         user_pos = leaderboard_df.reset_index().index[leaderboard_df['IsCurrentUser']].tolist()
         if user_pos:
             st.success(f"Your position in the leaderboard: #{user_pos[0] + 1}")
-
     fig = px.bar(
         leaderboard_df.head(10),
         x='Username',
@@ -74,7 +70,6 @@ with tab1:
         title='Top 10 Users by Points'
     )
     st.plotly_chart(fig, use_container_width=True)
-
     st.subheader("Leaderboard Rankings")
     display_df = leaderboard_df[['Username', 'Rank', 'Points', 'Region']]
     st.dataframe(
@@ -92,12 +87,10 @@ with tab2:
             Users=('Username', 'count'),
             Avg_Points=('Points', 'mean')
         ).reset_index()
-
         st.plotly_chart(
             px.bar(region_stats, x='Region', y='Avg_Points', title='Average Points by Region'),
             use_container_width=True
         )
-
         if user_entry:
             st.info(f"Your region: {user_entry['Region']}")
 
@@ -105,33 +98,25 @@ with tab2:
 
 with tab3:
     st.subheader("Manage Your Profile")
-
     # Create a radio button to update profile
     action = st.radio("Select Action", ["Update My Profile"])
-
     if action == "Update My Profile":
         st.write("Update your leaderboard information")
-        
         # Pre-fill form if user exists
         username = st.text_input("Username", 
                               value=user_entry['Username'] if user_entry else "")
-        
         rank = st.number_input("Rank", 
                             min_value=1, 
                             value=int(user_entry['Rank']) if user_entry and user_entry['Rank'] != '?' else 1)
-        
         points = st.number_input("Points", 
                               min_value=0, 
                               value=int(user_entry['Points']) if user_entry else 0)
-        
         region = st.text_input("Region", 
                             value=user_entry['Region'] if user_entry else "")
-        
         profile_pic = st.selectbox("Profile Picture", 
                                options=["profile1.jpeg", "profile2.jpeg", "profile3.jpeg", 
                                        "profile4.jpeg", "profile5.jpeg"],
                                index=0)
-        
         if st.button("Update Profile"):
             # Prepare data for API
             update_data = {
@@ -141,11 +126,9 @@ with tab3:
                 "Region": region,
                 "Profile_Pic": profile_pic
             }
-            
             try:
                 # Send PUT request to update profile
                 response = requests.put(API_URL, json=update_data, timeout=5)
-                
                 if response.status_code == 200:
                     st.success("Profile updated successfully!")
                     # Refresh the page
@@ -154,7 +137,6 @@ with tab3:
                     st.error(f"Failed to update profile. Status code: {response.status_code}")
                     if hasattr(response, 'text') and response.text:
                         st.error(f"Error details: {response.text}")
-            
             except Exception as e:
                 st.error(f"Error updating profile: {str(e)}")
     

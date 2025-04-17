@@ -9,15 +9,12 @@ from modules.nav import SideBarLinks
 SideBarLinks()
 st.header('Arnold\'s Workout Logger')
 API_URL = f"http://web-api:4000/c/workout_log/33"
-
-# Create tabs for viewing and adding workout logs
 tab1, tab2 = st.tabs(["View Workout Logs", "Add New Workout"])
 
 with tab1:
     try:
         # Log the URL we're trying to connect to
         logger.info(f"Connecting to API at: {API_URL}")
-        
         with st.spinner("Loading workout logs..."):
             # Send GET request to Flask backend
             response = requests.get(API_URL, timeout=5)
@@ -40,7 +37,6 @@ with tab1:
 
 with tab2:
     st.subheader("Add New Workout Entry")
-    
     # Create form for new workout entry
     with st.form("workout_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
@@ -52,14 +48,11 @@ with tab2:
             
             # Convert the date to string format for the API
             formatted_date = workout_date.strftime("%Y-%m-%d")
-            
             workout_type = st.selectbox(
                 "Workout Type", 
                 ["Strength Training", "Cardio", "Flexibility", "HIIT", "Crossfit", "Other"]
             )
-            
             duration = st.number_input("Duration (minutes)", min_value=1, max_value=300, value=60)
-            
             intensity = st.select_slider(
                 "Workout Intensity",
                 options=["Very Light", "Light", "Moderate", "Vigorous", "Maximum"],
@@ -68,25 +61,18 @@ with tab2:
         
         with col2:
             exercise_name = st.text_input("Exercise Name", "")
-            
             sets = st.number_input("Number of Sets", min_value=1, max_value=20, value=3)
-            
             reps = st.number_input("Number of Reps", min_value=1, max_value=100, value=10)
-            
             weight = st.number_input("Weight (if applicable, in kg)", min_value=0, max_value=500, value=0)
-        
         notes = st.text_area("Notes (optional)", "")
         
         # Submit button
         submitted = st.form_submit_button("Log Workout")
-        
         if submitted:
             # Calculate total weight (sets * reps * weight)
             total_weight = int(sets * reps * weight) if weight > 0 else 0
-            
             # Use total time from duration
             total_time = int(duration)
-            
             # Prepare data for API - using only the fields your Flask endpoint expects
             workout_data = {
                 "Total_Weight": total_weight,
@@ -97,7 +83,6 @@ with tab2:
                 # Send POST request to API - use the same URL for both GET and POST
                 logger.info(f"Posting workout data to: {API_URL}")
                 response = requests.post(API_URL, json=workout_data, timeout=5)
-                
                 if response.status_code == 201:
                     st.success("Workout successfully logged!")
                     # Instead of rerun, use a flag in session state to trigger a refresh
