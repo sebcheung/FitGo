@@ -136,17 +136,35 @@ def get_meals():
 
 
 # Add a new meal
-@nutritionist.route('/meals', methods=['POST'])
-def add_meal():
-    data = request.json
-    query = f"""
-        INSERT INTO Meals (Plan_ID, Name, Type, Recipe, Ingredients)
-        VALUES ({data['Plan_ID']}, '{data['Name']}', '{data['Type']}', '{data['Recipe']}', '{data['Ingredients']}')
-    """
+@nutritionist.route('/restrictions/<client_id>', methods=['POST'])
+def add_restriction(client_id):
     cursor = db.get_db().cursor()
-    cursor.execute(query)
+    data = request.get_json()
+    restriction = data.get("restriction")
+
+    cursor.execute("SELECT MedicalRecord_ID FROM Medical_Record WHERE Client_ID = %s", (client_id,))
+    result = cursor.fetchone()
+
+    if not result:
+        cursor.execute("""
+            INSERT INTO Medical_Record (Client_ID, Nutritionist_ID, Date_created)
+            VALUES (%s, %s, NOW())
+        """, (client_id, 1))
+        db.get_db().commit()
+
+        cursor.execute("SELECT MedicalRecord_ID FROM Medical_Record WHERE Client_ID = %s", (client_id,))
+        result = cursor.fetchone()
+
+    medical_record_id = result[0]
+
+    cursor.execute("""
+        INSERT INTO Medical_Restriction (MedicalRecord_ID, Restriction)
+        VALUES (%s, %s)
+    """, (medical_record_id, restriction))
     db.get_db().commit()
-    return make_response("Meal added", 201)
+
+    return make_response(jsonify({"message": "Restriction added successfully"}), 201)
+
 
 
 # Update an existing meal
