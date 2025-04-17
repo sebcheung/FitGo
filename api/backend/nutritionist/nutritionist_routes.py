@@ -93,20 +93,34 @@ def get_restrictions(client_id):
 
 
 # Add a dietary restriction for a client
-@nutritionist.route('/restrictions/<int:client_id>', methods=['POST'])
+@nutritionist.route('/restrictions/<client_id>', methods=['POST'])
 def add_restriction(client_id):
-    data = request.json
-    restriction = data['restriction']
-    find_record = f"SELECT MedicalRecord_ID FROM Medical_Record WHERE Client_ID = {client_id}"
     cursor = db.get_db().cursor()
-    cursor.execute(find_record)
-    record = cursor.fetchone()
-    if not record:
-        return make_response("Medical record not found", 404)
-    insert = f"INSERT INTO Medical_Restriction (MedicalRecord_ID, Restriction) VALUES ({record['MedicalRecord_ID']}, '{restriction}')"
-    cursor.execute(insert)
+    data = request.get_json()
+    restriction = data.get("restriction")
+
+    cursor.execute("SELECT MedicalRecord_ID FROM Medical_Record WHERE Client_ID = %s", (client_id,))
+    result = cursor.fetchone()
+
+    if not result:
+        cursor.execute("""
+            INSERT INTO Medical_Record (Client_ID, Nutritionist_ID, Date_created)
+            VALUES (%s, %s, NOW())
+        """, (client_id, 1))
+        db.get_db().commit()
+
+        cursor.execute("SELECT MedicalRecord_ID FROM Medical_Record WHERE Client_ID = %s", (client_id,))
+        result = cursor.fetchone()
+
+    medical_record_id = result[0]
+
+    cursor.execute("""
+        INSERT INTO Medical_Restriction (MedicalRecord_ID, Restriction)
+        VALUES (%s, %s)
+    """, (medical_record_id, restriction))
     db.get_db().commit()
-    return make_response("Restriction added", 201)
+
+    return make_response(jsonify({"message": "Restriction added successfully"}), 201)
 
 
 # Remove a dietary restriction for a client
@@ -136,34 +150,17 @@ def get_meals():
 
 
 # Add a new meal
-@nutritionist.route('/restrictions/<client_id>', methods=['POST'])
-def add_restriction(client_id):
+@nutritionist.route('/meals', methods=['POST'])
+def add_meal():
+    data = request.json
+    query = f"""
+        INSERT INTO Meals (Plan_ID, Name, Type, Recipe, Ingredients)
+        VALUES ({data['Plan_ID']}, '{data['Name']}', '{data['Type']}', '{data['Recipe']}', '{data['Ingredients']}')
+    """
     cursor = db.get_db().cursor()
-    data = request.get_json()
-    restriction = data.get("restriction")
-
-    cursor.execute("SELECT MedicalRecord_ID FROM Medical_Record WHERE Client_ID = %s", (client_id,))
-    result = cursor.fetchone()
-
-    if not result:
-        cursor.execute("""
-            INSERT INTO Medical_Record (Client_ID, Nutritionist_ID, Date_created)
-            VALUES (%s, %s, NOW())
-        """, (client_id, 1))
-        db.get_db().commit()
-
-        cursor.execute("SELECT MedicalRecord_ID FROM Medical_Record WHERE Client_ID = %s", (client_id,))
-        result = cursor.fetchone()
-
-    medical_record_id = result[0]
-
-    cursor.execute("""
-        INSERT INTO Medical_Restriction (MedicalRecord_ID, Restriction)
-        VALUES (%s, %s)
-    """, (medical_record_id, restriction))
+    cursor.execute(query)
     db.get_db().commit()
-
-    return make_response(jsonify({"message": "Restriction added successfully"}), 201)
+    return make_response("Meal added", 201)
 
 
 
