@@ -70,8 +70,8 @@ docker compose down db
 ---
 
 ## 📦 Container Overview
-app ------ Streamlit frontend ------ port: 8501
-api ------ Flask backend API ------- port: 4000
+app ------ Streamlit frontend ------ port: 8501  
+api ------ Flask backend API ------- port: 4000  
 db ------- MySQL Database ---------- port: 3200
 
 ---
