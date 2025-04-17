@@ -14,7 +14,7 @@ client_id = st.text_input("Enter Client ID:", "1")
 
 BASE_URL = "http://web-api:4000/n"
 
-# ----------------- Add Restriction ------------------
+#Add Restriction 
 st.subheader("➕ Add a New Restriction")
 new_rest = st.text_input("Enter new restriction")
 if st.button("Add Restriction") and new_rest:
@@ -24,7 +24,7 @@ if st.button("Add Restriction") and new_rest:
     else:
         st.error("Failed to add restriction.")
 
-# ----------------- Delete Restriction ------------------
+# Delete Restriction
 st.subheader("❌ Delete an Existing Restriction")
 delete_rest = st.text_input("Enter restriction to delete")
 if st.button("Delete Restriction") and delete_rest:

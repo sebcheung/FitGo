@@ -43,7 +43,7 @@ with tab1:
                     else:
                         st.info("No health metrics found.")
                 else:
-                    st.error(f"Failed to fetch health data. Status code: {resp.status_code}")
+                    st.error(f"Failed to fetch health data.")
             except Exception as e:
                 st.error(f"Error: {str(e)}")
 
@@ -84,7 +84,7 @@ with tab1:
                     if r.status_code == 201:
                         st.success("Metric added successfully!")
                     else:
-                        st.error(f"Failed to add metric. Status code: {r.status_code}")
+                        st.error(f"Failed to add metric.")
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
 
@@ -140,7 +140,7 @@ with tab1:
                         if r.status_code == 200:
                             st.success("Metric updated successfully!")
                         else:
-                            st.error(f"Update failed. Status code: {r.status_code}")
+                            st.error(f"Update failed.")
                     except Exception as e:
                         st.error(f"Error: {str(e)}")
                 else:
@@ -159,7 +159,7 @@ with tab2:
             else:
                 st.info("No resources available.")
         else:
-            st.warning(f"Failed to fetch resources. Status: {resp.status_code}")
+            st.warning(f"Failed to fetch resources.")
     except Exception as e:
         st.error(f"Error fetching resources: {str(e)}")
 
@@ -185,7 +185,7 @@ with tab2:
                     if r.status_code in [200, 201]:
                         st.success("Resource added successfully!")
                     else:
-                        st.error(f"Failed to add resource. Status code: {r.status_code}")
+                        st.error(f"Failed to add resource.")
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
             else:
