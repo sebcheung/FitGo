@@ -110,7 +110,7 @@ with st.form('Delete an Existing Client'):
         if response.status_code == 200:
             st.success(response.text)
         else:
-            st.error(f'Failed to delete employee {client_id}')
+            st.error(f'Failed to delete client {client_id}')
 
 
 

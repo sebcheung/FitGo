@@ -73,7 +73,7 @@ with st.form('Cancel an Existing Event'):
         if response.status_code == 200:
             st.success(response.text)
         else:
-            st.error(f'Failed to delete employee {event_id}')
+            st.error(f'Failed to delete event {event_id}')
 
 
 

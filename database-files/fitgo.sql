@@ -38,8 +38,10 @@ CREATE TABLE Event_Attendee (
     Client_ID int NOT NULL,
     Event_ID int NOT NULL,
     PRIMARY KEY (Client_ID, Event_ID),
-    CONSTRAINT fk_00 FOREIGN KEY (Client_ID) REFERENCES Client (Client_ID),
+    CONSTRAINT fk_00 FOREIGN KEY (Client_ID) REFERENCES Client (Client_ID)
+                            ON DELETE CASCADE,
     CONSTRAINT fk_01 FOREIGN KEY (Event_ID) REFERENCES Event (Event_ID)
+                            ON DELETE CASCADE
 );
 
 -- Table for GYM OWNER
@@ -64,7 +66,8 @@ CREATE TABLE Employee (
     SSN varchar(15) NOT NULL,
     Address varchar(100),
     PRIMARY KEY (Employee_ID),
-    CONSTRAINT fk_02 FOREIGN KEY (Manager_ID) REFERENCES Employee (Employee_ID),
+    CONSTRAINT fk_02 FOREIGN KEY (Manager_ID) REFERENCES Employee (Employee_ID)
+                      ON DELETE CASCADE,
     CONSTRAINT fk_03 FOREIGN KEY (Boss_ID) REFERENCES Gym_Owner (Owner_ID)
 );
 
@@ -73,8 +76,10 @@ CREATE TABLE Event_Worker (
     Event_ID int NOT NULL,
     Employee_ID int NOT NULL,
     PRIMARY KEY (Event_ID, Employee_ID),
-    CONSTRAINT fk_04 FOREIGN KEY (Event_ID) REFERENCES Event (Event_ID),
+    CONSTRAINT fk_04 FOREIGN KEY (Event_ID) REFERENCES Event (Event_ID)
+                          ON DELETE CASCADE,
     CONSTRAINT fk_05 FOREIGN KEY (Employee_ID) REFERENCES Employee (Employee_ID)
+                          ON DELETE CASCADE
 );
 
 -- Table for GYM
@@ -114,6 +119,7 @@ CREATE TABLE Health_Metrics (
     Body_Fat_Percentage decimal(4, 2),
     PRIMARY KEY (Record_ID),
     CONSTRAINT fk_08 FOREIGN KEY (User_ID) REFERENCES Client (Client_ID)
+                            ON DELETE CASCADE
 );
 
 -- Table for Progress Visuals
@@ -384,6 +390,7 @@ CREATE TABLE Medical_Record (
     Dietary_pref TEXT,
     PRIMARY KEY (MedicalRecord_ID),
     FOREIGN KEY (Client_ID) REFERENCES Client (Client_ID)
+                            ON DELETE CASCADE
 );
 
 -- Table for Allergies

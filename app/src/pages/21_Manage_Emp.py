@@ -50,6 +50,7 @@ with st.form('Add a New Employee'):
         data['Boss_ID'] = boss_id
         data['Hire_Date'] = hire_date
 
+
         response = requests.post('http://api:4000/go/employees', json = data)
 
         if response.status_code == 200:
