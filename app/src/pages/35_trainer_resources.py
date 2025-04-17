@@ -11,23 +11,20 @@ if 'user_id' in st.session_state:
 else:
     trainer_id = 1
 
-# Base URL for API
 BASE_URL = "http://web-api:4000/t"
 
-# Create tabs for organization
 tab1, tab2 = st.tabs(["Health Metrics", "Trainer Resources"])
 
 with tab1:
     st.header("💓 Client Health Metrics")
 
-    # Health metrics section
     with st.form("get_health_metrics"):
         # Get client id
         client_id = st.text_input("Client ID to view health data", "33")
         submitted = st.form_submit_button("Retrieve Health Metrics")
         
         if submitted:
-            # Retrieve health metrics through API
+            # Get health metrics through API
             try:
                 resp = requests.get(f"{BASE_URL}/health_metrics/{client_id}")
                 if resp.ok:
@@ -36,10 +33,6 @@ with tab1:
                         df = pd.DataFrame(data)
                         st.dataframe(df, use_container_width=True)
                         
-                        # Add a simple visualization if data exists
-                        if 'Heart_Rate' in df.columns and 'Date' in df.columns:
-                            df['Date'] = pd.to_datetime(df['Date'])
-                            st.line_chart(df.set_index('Date')['Heart_Rate'])
                     else:
                         st.info("No health metrics found.")
                 else:
@@ -76,9 +69,7 @@ with tab1:
                 
                 # Use API to add the health metric
                 try:
-                    # First check if we need to include client ID in URL
                     health_url = f"{BASE_URL}/health_metrics/{user_id}"
-                    st.info(f"Attempting to post to: {health_url}")
                     
                     r = requests.post(health_url, json=payload)
                     if r.status_code == 201:
@@ -91,7 +82,7 @@ with tab1:
     with col2:
         st.subheader("✏️ Update Existing Metric")
         
-        # First get available records
+        # Get available records
         client_for_update = st.text_input("Client ID for update", "33")
         
         if st.button("Fetch Records"):
@@ -134,7 +125,6 @@ with tab1:
                     # Update health metric through API
                     try:
                         update_url = f"{BASE_URL}/health_metrics/{client_for_update}/{record_id}"
-                        st.info(f"Attempting to update: {update_url}")
                         
                         r = requests.put(update_url, json=update_data)
                         if r.status_code == 200:
