@@ -13,7 +13,6 @@ tab1, tab2 = st.tabs(["View Workout Logs", "Add New Workout"])
 
 with tab1:
     try:
-        # Log the URL we're trying to connect to
         logger.info(f"Connecting to API at: {API_URL}")
         with st.spinner("Loading workout logs..."):
             # Send GET request to Flask backend
@@ -69,11 +68,8 @@ with tab2:
         # Submit button
         submitted = st.form_submit_button("Log Workout")
         if submitted:
-            # Calculate total weight (sets * reps * weight)
             total_weight = int(sets * reps * weight) if weight > 0 else 0
-            # Use total time from duration
             total_time = int(duration)
-            # Prepare data for API - using only the fields your Flask endpoint expects
             workout_data = {
                 "Total_Weight": total_weight,
                 "Total_Time": total_time
@@ -85,7 +81,6 @@ with tab2:
                 response = requests.post(API_URL, json=workout_data, timeout=5)
                 if response.status_code == 201:
                     st.success("Workout successfully logged!")
-                    # Instead of rerun, use a flag in session state to trigger a refresh
                     st.session_state.workout_submitted = True
                 else:
                     st.error(f"Failed to log workout. Status code: {response.status_code}")
@@ -111,9 +106,7 @@ with tab2:
 if st.session_state.get('workout_submitted', False):
     # Reset the flag
     st.session_state.workout_submitted = False
-    # Show a message
     st.info("Refreshing data...")
-    # Use Javascript to do a page refresh without the experimental_rerun
     st.markdown("""
     <script>
         window.location.reload();

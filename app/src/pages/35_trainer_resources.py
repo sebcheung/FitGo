@@ -9,7 +9,7 @@ st.title("🏥 Health Metrics & 📚 Trainer Resources")
 if 'user_id' in st.session_state:
     trainer_id = st.session_state.get("user_id", 1)
 else:
-    trainer_id = 1  # Default trainer ID
+    trainer_id = 1
 
 # Base URL for API
 BASE_URL = "http://web-api:4000/t"
