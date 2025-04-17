@@ -14,7 +14,7 @@ FitGo is a comprehensive fitness and wellness tracking platform that combines wo
 - **Nutrition Management**: Track meals, calories, and macronutrients
 - **Health Metrics Dashboard**: Monitor vitals like heart rate and sleep
 - **Leaderboards**: Join challenges and stay motivated with community rankings
-- **Personal Connections** - Message and collaborate with trainers and nutritionists for personalized guidance
+- **Personal Connections**: Message and collaborate with trainers and nutritionists for personalized guidance
 
 ## Demo Links
 - Google Drive: https://drive.google.com/file/d/1Q7rfANnfl-85hw9fbAiiyqqyN6OVF93U/view?usp=sharing
