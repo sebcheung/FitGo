@@ -1,7 +1,7 @@
-# FitGo: Integrated Fitness and Wellness Platform
+# FitGo: Your All-in-One Fitness and Wellness Companion
 
 ## Overview
-FitGo is a comprehensive fitness and wellness tracking platform that combines workout planning, nutrition tracking, health monitoring, and professional guidance into one streamlined app. Our goal is to resolve the issue of utilizing different apps for these tasks by bringing it all together in a cohesive dashboard that enables users to identify key trends/patterns and make informed lifestyle choices based on reliable data. 
+FitGo is a comprehensive fitness and wellness tracking platform that combines workout planning, nutrition tracking, health monitoring, and professional guidance into one streamlined app. Our goal is to resolve the issue of utilizing different apps for these tasks by bringing them all together in a cohesive dashboard that enables users to identify key trends/patterns and make informed lifestyle choices based on reliable data. 
 
 ### Who It's For
 - **Fitness Enthusiasts** – Track performance metrics, log workouts, participate in competitions
@@ -14,6 +14,7 @@ FitGo is a comprehensive fitness and wellness tracking platform that combines wo
 - **Nutrition Management**: Track meals, calories, and macronutrients
 - **Health Metrics Dashboard**: Monitor vitals like heart rate and sleep
 - **Leaderboards**: Join challenges and stay motivated with community rankings
+- **Personal Connections** - Message and collaborate with trainers and nutritionists for personalized guidance
 
 ## Demo Links
 - Google Drive: https://drive.google.com/file/d/1Q7rfANnfl-85hw9fbAiiyqqyN6OVF93U/view?usp=sharing
