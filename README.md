@@ -95,3 +95,9 @@ POST to add new data
 PUT to update data
 
 🧠 All API calls return JSON and follow RESTful conventions.
+
+---
+
+## 📄 License
+This project is licensed under the MIT License.
+See the LICENSE file for more information.
