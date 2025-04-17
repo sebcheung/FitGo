@@ -76,7 +76,7 @@ with tab2:
             }
             
             try:
-                # Send POST request to API - use the same URL for both GET and POST
+                # Send POST request to API
                 logger.info(f"Posting workout data to: {API_URL}")
                 response = requests.post(API_URL, json=workout_data, timeout=5)
                 if response.status_code == 201:
