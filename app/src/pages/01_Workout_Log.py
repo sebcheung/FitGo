@@ -81,7 +81,6 @@ with tab2:
                 response = requests.post(API_URL, json=workout_data, timeout=5)
                 if response.status_code == 201:
                     st.success("Workout successfully logged!")
-                    st.session_state.workout_submitted = True
                 else:
                     st.error(f"Failed to log workout. Status code: {response.status_code}")
                     if hasattr(response, 'text') and response.text:
@@ -101,14 +100,3 @@ with tab2:
         - Record your perceived exertion for better tracking over time
         - Include any modifications or variations in the notes section
         """)
-
-# Check if we need to refresh the page
-if st.session_state.get('workout_submitted', False):
-    # Reset the flag
-    st.session_state.workout_submitted = False
-    st.info("Refreshing data...")
-    st.markdown("""
-    <script>
-        window.location.reload();
-    </script>
-    """, unsafe_allow_html=True)
