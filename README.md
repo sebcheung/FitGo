@@ -72,4 +72,4 @@ The REST API is organized by creating blueprints for each of our four user perso
 
 All blueprints contain GET, POST, PUT, and DELETE routes to retrieve, add, update, and delete data based on the given persona's needs. 
 
-### By CS 3200 Course Project team members: Sebastian Cheung, Saachi Bhatia, Tarun Anbarasu, Naisha Mistry, and Andrei Zubek
+### By team members: Sebastian Cheung, Saachi Bhatia, Tarun Anbarasu, Naisha Mistry, and Andrei Zubek
